@@ -43,23 +43,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/wakeUpTaskProblemTitle"
+        android:id="@+id/wakeUpTaskClickLinkText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="<wake-up task problem title>"
+        android:layout_marginTop="60dp"
+        android:text="@string/clickLink"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/wakeUpTaskTitle" />
 
-    <Button
-        android:id="@+id/button"
+    <TextView
+        android:id="@+id/wakeUpTaskLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit"
+        android:layout_marginTop="40dp"
+        android:text="<wake-up task link>"
+        android:textAlignment="center"
+        android:textColor="@color/blue_link"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="658dp" />
+        app:layout_constraintTop_toBottomOf="@+id/wakeUpTaskClickLinkText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
