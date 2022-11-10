@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/editAlarmLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".alarm.EditAlarmFragment">
+
+    <TextView
+        android:id="@+id/editAlarmSaturday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/saturday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmFriday"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmFriday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/friday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmThursday"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmThursday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/thursday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmWednesday"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmWednesday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/wednesday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmTuesday"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmTuesday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/tuesday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmMonday"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmMonday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/monday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmSunday"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/plusSign"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/editAlarmTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/editAlarm"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmLeftArrow"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/editAlarmLeftArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editAlarmTimeInput"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="@string/editAlarmTimeInputHint"
+        android:inputType="time"
+        android:textSize="48sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTitle" />
+
+    <Switch
+        android:id="@+id/editAlarmAMPMSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="100dp"
+        android:scaleX="1.25"
+        android:scaleY="1.25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmLeftArrow" />
+
+    <TextView
+        android:id="@+id/editAlarmAMPMText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="115dp"
+        android:text="AM"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmAMPMSwitch" />
+
+    <TextView
+        android:id="@+id/editAlarmRepeatText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/repeat"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <TextView
+        android:id="@+id/editAlarmSnoozeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/snooze"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmRepeatText" />
+
+    <TextView
+        android:id="@+id/editAlarmWakeUpTaskText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/wakeUpTask"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmSnoozeText" />
+
+    <Button
+        android:id="@+id/editAlarmSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:text="@string/saveAlarm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmWakeUpTaskText" />
+
+    <TextView
+        android:id="@+id/editAlarmSunday"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/light_grey"
+        android:text="@string/sunday"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/editAlarmRepeatText"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+
+    <Switch
+        android:id="@+id/editAlarmSnoozeSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmRepeatText" />
+
+    <Switch
+        android:id="@+id/editAlarmWakeUpTaskSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmSnoozeSwitch" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

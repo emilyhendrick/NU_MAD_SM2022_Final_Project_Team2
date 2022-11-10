@@ -22,4 +22,34 @@
     <string name="title_alarm">Alarm</string>
     <string name="title_profile">Profile</string>
 
+    // profile
+    <string name="profile">Profile</string>
+    <string name="name">Name:</string>
+    <string name="pronouns">Pronouns:</string>
+    <string name="email2">Email:</string>
+    <string name="birthday">Birthday:</string>
+    <string name="editProfile">Edit Profile</string>
+    <string name="saveProfileChanges">Save Profile Changes</string>
+    <string name="editProfileImage">Edit Profile Image</string>
+
+    // alarm / wake-up task
+    <string name="alarm">Alarm</string>
+    <string name="editAlarm">Edit Alarm</string>
+    <string name="repeat">Repeat</string>
+    <string name="snooze">Snooze</string>
+    <string name="wakeUpTask">Wake-Up Task</string>
+    <string name="daily">Daily</string>
+    <string name="saveAlarm">Save Alarm</string>
+    <string name="plusSign">+</string>
+    <string name="editAlarmTimeInputHint">00:00</string>
+    <string name="sunday">S</string>
+    <string name="monday">M</string>
+    <string name="tuesday">T</string>
+    <string name="wednesday">W</string>
+    <string name="thursday">Th</string>
+    <string name="friday">F</string>
+    <string name="saturday">S</string>
+    <string name="submit">Submit</string>
+
+
 </resources>
