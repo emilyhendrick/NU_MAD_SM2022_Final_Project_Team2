@@ -7,14 +7,19 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22217326628856182" />
         <entry key="app/src/main/res/layout/activity_main_app.xml" value="0.19407908121744794" />
         <entry key="app/src/main/res/layout/event_list_item.xml" value="0.34119873046875004" />
-        <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.20572916666666666" />
+        <entry key="app/src/main/res/layout/alarm_row.xml" value="0.27856936247452446" />
+        <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.32971750895182295" />
         <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.15251719156901042" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.13229166666666667" />
+        <entry key="app/src/main/res/layout/fragment_edit_alarm.xml" value="0.29053683073624315" />
+        <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.27055794233729896" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.21990966796875006" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.17650218474559293" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.13229166666666667" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.287275471634174" />
         <entry key="app/src/main/res/layout/fragment_register.xml" value="0.2528724240034056" />
         <entry key="app/src/main/res/layout/fragment_tasks.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_wake_up_task.xml" value="0.2772262279506633" />
         <entry key="app/src/main/res/layout/fragment_welcome.xml" value="0.22987742888621793" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2406743367513021" />
       </map>
