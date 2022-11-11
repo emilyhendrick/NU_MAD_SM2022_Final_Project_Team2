@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <TextView
+            android:id="@+id/calendarEventTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:maxLines="3"
+            android:text="time"
+            android:textSize="20sp"
+            android:layout_marginRight="20dp"
+            android:textStyle="bold"></TextView>
+
+        <FrameLayout
+            android:layout_width="321dp"
+            android:layout_height="100dp"
+            android:layout_weight="3"
+            android:background="#FFFFFF"
+            android:backgroundTint="#B8B8B8">
+
+            <TextView
+                android:id="@+id/calendarEventName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="event name"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
