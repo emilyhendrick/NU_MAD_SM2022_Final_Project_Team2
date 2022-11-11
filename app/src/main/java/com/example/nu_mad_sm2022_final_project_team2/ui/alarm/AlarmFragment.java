@@ -24,7 +24,7 @@ public class AlarmFragment extends Fragment {
         binding = FragmentAlarmBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
+        final TextView textView = binding.alarmPlus;
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
