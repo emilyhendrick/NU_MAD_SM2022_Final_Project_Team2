@@ -111,15 +111,15 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     private void populateScreen() {
         if (currentUser != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
-                    .addToBackStack(null)
-                    .commit();
-
 //            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragmentContainer, .newInstance(),"alarmFragment")
+//                    .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
 //                    .addToBackStack(null)
 //                    .commit();
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, AlarmFragment.newInstance(),"alarmFragment")
+                    .addToBackStack(null)
+                    .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainer, new WelcomeFragment(), "welcomeFragment")
@@ -291,6 +291,13 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, EditProfileFragment.newInstance(),"editProfileFragment")
                 .commit();
+    }
+
+    @Override
+    public void logoutClicked() {
+        mAuth.signOut();
+        currentUser = null;
+        populateScreen();
     }
 
     @Override

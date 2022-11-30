@@ -131,7 +131,7 @@ public class RegisterFragment extends Fragment {
                 boolean inputsValid = validateInputs(firstName, lastName, pronouns, birthday, email, password, retypedPassword);
 
                 if (inputsValid) {
-                    addUserToFirebase(getContext(), firstName, lastName, pronouns, birthday, email, password);
+                    createUserInFirebase(getContext(), firstName, lastName, pronouns, birthday, email, password);
                 }
             }
         });
@@ -180,7 +180,7 @@ public class RegisterFragment extends Fragment {
         return isValid;
     }
 
-    private void addUserToFirebase(Context context, String firstName, String lastName, String pronouns, String birthday, String email, String password) {
+    private void createUserInFirebase(Context context, String firstName, String lastName, String pronouns, String birthday, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override

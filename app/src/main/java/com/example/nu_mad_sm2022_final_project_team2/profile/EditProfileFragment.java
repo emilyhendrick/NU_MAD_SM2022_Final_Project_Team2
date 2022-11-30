@@ -37,6 +37,9 @@ public class EditProfileFragment extends Fragment {
     private TextView firstNameInput, lastNameInput, pronounsInput, emailInput, birthdayInput, passwordInput, retypedPasswordInput;
     private Button editAvatarButton, saveChangesButton, editProfileBackButton;
 
+    private ArrayList<Alarm> alarms = new ArrayList<>();
+    private String avatarUri = null;
+
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore db;
@@ -86,37 +89,7 @@ public class EditProfileFragment extends Fragment {
         avatar = view.findViewById(R.id.editAvatar);
         editProfileBackArrow = view.findViewById(R.id.editProfileLeftArrow);
 
-        final ArrayList<Alarm>[] alarms = new ArrayList[]{new ArrayList<Alarm>()};
-
-        final User[] user = new User[1];
-        db.collection("users").document(mUser.getEmail()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        user[0] = documentSnapshot.toObject(User.class);
-                        alarms[0] = user[0].getAlarms();
-
-                        firstNameInput.setText(user[0].getFirstName());
-                        lastNameInput.setText(user[0].getLastName());
-                        pronounsInput.setText(user[0].getPronouns());
-                        emailInput.setText(user[0].getEmail());
-                        birthdayInput.setText(user[0].getBirthday());
-
-                        if (user[0].getAvatarUri() != null) {
-                            Uri avatarUri = Uri.parse(user[0].getAvatarUri());
-                            Glide.with(view)
-                                    .load(avatarUri)
-                                    .centerCrop()
-                                    .into(avatar);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        loadProfile(view);
 
         editProfileBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,13 +114,13 @@ public class EditProfileFragment extends Fragment {
                 String newEmail = emailInput.getText().toString();
                 String newBirthday = birthdayInput.getText().toString();
 
-                User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, user[0].getAvatarUri(), alarms[0]);
+                User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, avatarUri, alarms);
                 updateFirebaseUser(getContext(), newUser);
 
                 String newPassword = passwordInput.getText().toString();
                 String newRetypedPassword = retypedPasswordInput.getText().toString();
 
-                if (newPassword.length() > 0 && newPassword.equals(retypedPasswordInput)) {
+                if (newPassword.length() > 0 && newPassword.equals(newRetypedPassword)) {
                     mUser.updatePassword(newPassword);
                     mUser.reload();
                 }
@@ -158,6 +131,45 @@ public class EditProfileFragment extends Fragment {
 
 
         return view;
+    }
+
+    private void loadProfile(View view) {
+        db.collection("users").document(mUser.getEmail()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+
+                        alarms = user.getAlarms();
+
+                        firstNameInput.setText(user.getFirstName());
+                        lastNameInput.setText(user.getLastName());
+                        pronounsInput.setText(user.getPronouns());
+                        emailInput.setText(user.getEmail());
+                        birthdayInput.setText(user.getBirthday());
+
+                        if (user.getAvatarUri() != null) {
+                            avatarUri = user.getAvatarUri();
+                            Uri avatarUri = Uri.parse(user.getAvatarUri());
+                            Glide.with(view)
+                                    .load(avatarUri)
+                                    .centerCrop()
+                                    .into(avatar);
+                        }
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Toast.makeText(getContext(), "Profile loaded!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void updateFirebaseUser(Context context, User updatedUser) {

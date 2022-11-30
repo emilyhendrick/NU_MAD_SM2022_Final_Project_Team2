@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
+    private static final String ALARM_ID = "ALARM_ID";
     private static final String WAKEUP_TASK = "WAKEUP_TASK";
     private static final String MESSAGE = "MESSAGE";
 
@@ -30,7 +31,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
             }
 
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, intent.getIntExtra("ALARM_ID", 0), i, PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "ALARM_CHANNEL")
                     .setSmallIcon(R.drawable.logo)

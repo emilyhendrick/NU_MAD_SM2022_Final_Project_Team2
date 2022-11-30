@@ -121,6 +121,7 @@ public class Alarm {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+        intent.putExtra("ALARM_ID", this.alarmId);
         intent.putExtra("WAKEUP_TASK", this.wakeUpTask);
         intent.putExtra("MESSAGE", this.message);
 
@@ -155,7 +156,7 @@ public class Alarm {
     public void cancelAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
-        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, this.alarmId, intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.cancel(alarmPendingIntent);
         this.isOn = false;
 

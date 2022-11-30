@@ -105,39 +105,13 @@ public class AddAlarmFragment extends Fragment {
         biweeklyOption = view.findViewById(R.id.addAlarmBiweeklyOption);
         radioGroup.check(R.id.addAlarmOnceOption);
 
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+        setCurrentTime();
 
-        if (hour == 0) {
-            hour = 12;
-        } else if (hour > 12) {
-            hour = hour - 12;
-        }
-
-        String hourStr = hour < 10 ? "0" + hour : String.valueOf(hour);
-        String minuteStr = minute < 10 ? "0" + minute : String.valueOf(minute);
-        String currentTime = hourStr + ":" + minuteStr;
-
-        addAlarmTimeInput.setText(currentTime);
         addAlarmTimeInput.setClickable(true);
         addAlarmTimeInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
-                        String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
-                        addAlarmTimeInput.setText(selectedHourStr + ":" + selectedMinuteStr);
-                    }
-                }, currentHour, currentMinute, true);
-
-                timePickerDialog.show();
+                showTimePicker();
             }
         });
 
@@ -156,6 +130,7 @@ public class AddAlarmFragment extends Fragment {
             }
         });
 
+
         addAlarmSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,35 +142,15 @@ public class AddAlarmFragment extends Fragment {
                 int minute = Integer.parseInt(minuteStr);
 
                 String message = addAlarmMessageInput.getText().toString();
-                if (message.length() == 0) {
-                    message = "Alarm";
-                }
                 boolean isAm = !addAlarmAMPMSwitch.isChecked();
                 boolean isWakeUpTask = addAlarmWakeUpTaskSwitch.isChecked();
 
                 int chosenOptionId = radioGroup.getCheckedRadioButtonId();
-                AlarmFrequency alarmFrequency;
-                switch (chosenOptionId) {
-                    case R.id.addAlarmOnceOption:
-                        alarmFrequency = AlarmFrequency.ONCE;
-                        break;
-                    case R.id.addAlarmDailyOption:
-                        alarmFrequency = AlarmFrequency.DAILY;
-                        break;
-                    case R.id.addAlarmWeeklyOption:
-                        alarmFrequency = AlarmFrequency.WEEKLY;
-                        break;
-                    case R.id.addAlarmBiweeklyOption:
-                        alarmFrequency = AlarmFrequency.BIWEEKLY;
-                        break;
-                    default:
-                        alarmFrequency = AlarmFrequency.ONCE;
-                        break;
-                }
-
+                AlarmFrequency alarmFrequency = getAlarmFrequency(chosenOptionId);
 
                 Alarm newAlarm = new Alarm(hour, minute, isAm, isWakeUpTask, true, alarmFrequency, message);
                 addAlarmInDatabase(newAlarm);
+                mListener.addAlarmDone();
             }
         });
 
@@ -203,23 +158,62 @@ public class AddAlarmFragment extends Fragment {
         return view;
     }
 
+    private void setCurrentTime() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        if (hour == 0) {
+            hour = 12;
+        } else if (hour > 12) {
+            hour = hour - 12;
+        }
+
+        String hourStr = hour < 10 ? "0" + hour : String.valueOf(hour);
+        String minuteStr = minute < 10 ? "0" + minute : String.valueOf(minute);
+        String currentTime = hourStr + ":" + minuteStr;
+
+        addAlarmTimeInput.setText(currentTime);
+    }
+
+    private void showTimePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
+                String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
+                addAlarmTimeInput.setText(selectedHourStr + ":" + selectedMinuteStr);
+            }
+        }, currentHour, currentMinute, true);
+
+        timePickerDialog.show();
+    }
+
+    private AlarmFrequency getAlarmFrequency(int chosenOptionId) {
+        switch (chosenOptionId) {
+            case R.id.addAlarmOnceOption: return AlarmFrequency.ONCE;
+            case R.id.addAlarmDailyOption: return AlarmFrequency.DAILY;
+            case R.id.addAlarmWeeklyOption: return AlarmFrequency.WEEKLY;
+            case R.id.addAlarmBiweeklyOption: return AlarmFrequency.BIWEEKLY;
+            default: return AlarmFrequency.ONCE;
+        }
+    }
+
     private void addAlarmInDatabase(Alarm newAlarm) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to get user", Toast.LENGTH_SHORT).show();
-                    }
-                })
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             User user = task.getResult().toObject(User.class);
                             ArrayList<Alarm> alarms = user.getAlarms();
-                            alarms = insertAlarmIntoAlarms(alarms, newAlarm);
+                            alarms = insertAlarmIntoSortedAlarms(alarms, newAlarm);
                             updateAlarms(alarms, newAlarm);
                         }
                     }
@@ -235,7 +229,6 @@ public class AddAlarmFragment extends Fragment {
                     public void onSuccess(Void unused) {
                         Toast.makeText(getContext(), "Alarm added!", Toast.LENGTH_SHORT).show();
                         newAlarm.schedule(getActivity().getApplicationContext());
-                        mListener.addAlarmDone();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -246,7 +239,7 @@ public class AddAlarmFragment extends Fragment {
                 });
     }
 
-    private ArrayList<Alarm> insertAlarmIntoAlarms(ArrayList<Alarm> alarms, Alarm newAlarm) {
+    private ArrayList<Alarm> insertAlarmIntoSortedAlarms(ArrayList<Alarm> alarms, Alarm newAlarm) {
         if (alarms.size() == 0) {
             alarms.add(newAlarm);
             return alarms;
