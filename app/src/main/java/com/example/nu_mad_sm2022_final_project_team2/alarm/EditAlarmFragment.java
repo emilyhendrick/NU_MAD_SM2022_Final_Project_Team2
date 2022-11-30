@@ -146,6 +146,9 @@ public class EditAlarmFragment extends Fragment {
                 int minute = Integer.parseInt(minuteStr);
 
                 String message = editAlarmMessageInput.getText().toString();
+                if (message == null || message.equals("")) {
+                    message = "Alarm";
+                }
                 boolean isAm = !editAlarmAMPMSwitch.isChecked();
                 boolean isWakeUpTask = editAlarmWakeUpTaskSwitch.isChecked();
 
@@ -154,7 +157,6 @@ public class EditAlarmFragment extends Fragment {
 
                 Alarm newAlarm = new Alarm(hour, minute, isAm, isWakeUpTask, alarm.isOn(), alarmFrequency, message);
                 updateAlarmInDatabase(newAlarm);
-                mListener.editAlarmDone();
             }
         });
 
@@ -162,12 +164,7 @@ public class EditAlarmFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (alarm.isOn()) {
-                    alarm.cancelAlarm(getActivity().getApplicationContext());
-                }
-
                 deleteAlarm();
-                mListener.editAlarmDone();
             }
         });
 
@@ -186,19 +183,19 @@ public class EditAlarmFragment extends Fragment {
         AlarmFrequency alarmFrequency = alarm.getAlarmFrequency();
         switch (alarmFrequency) {
             case ONCE:
-                radioGroup.check(R.id.addAlarmOnceOption);
+                radioGroup.check(R.id.editAlarmOnceOption);
                 break;
             case DAILY:
-                radioGroup.check(R.id.addAlarmDailyOption);
+                radioGroup.check(R.id.editAlarmDailyOption);
                 break;
             case WEEKLY:
-                radioGroup.check(R.id.addAlarmWeeklyOption);
+                radioGroup.check(R.id.editAlarmWeeklyOption);
                 break;
             case BIWEEKLY:
-                radioGroup.check(R.id.addAlarmBiweeklyOption);
+                radioGroup.check(R.id.editAlarmBiweeklyOption);
                 break;
             default:
-                radioGroup.check(R.id.addAlarmOnceOption);
+                radioGroup.check(R.id.editAlarmOnceOption);
                 break;
         }
 
@@ -211,6 +208,11 @@ public class EditAlarmFragment extends Fragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (selectedHour == 0) {
+                    selectedHour = 12;
+                } if (selectedHour > 12) {
+                    selectedHour = selectedHour - 12;
+                }
                 String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
                 String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
                 editAlarmTimeInput.setText(selectedHourStr + ":" + selectedMinuteStr);
@@ -253,6 +255,7 @@ public class EditAlarmFragment extends Fragment {
                             alarms.set(index, newAlarm);
                             updateAlarms(alarms);
                             newAlarm.schedule(getActivity().getApplicationContext());
+                            mListener.editAlarmDone();
                         }
                     }
                 });
@@ -263,18 +266,6 @@ public class EditAlarmFragment extends Fragment {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Toast.makeText(getContext(), "Alarm deleted.", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to delete alarm.", Toast.LENGTH_SHORT).show();
-                    }
-                })
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -283,6 +274,12 @@ public class EditAlarmFragment extends Fragment {
                             ArrayList<Alarm> alarms = user.getAlarms();
                             alarms.remove(alarm);
                             updateAlarms(alarms);
+
+                            if (alarm.isOn()) {
+                                alarm.cancelAlarm(getActivity().getApplicationContext());
+                            }
+
+                            mListener.editAlarmDone();
                         }
                     }
                 });
@@ -291,19 +288,7 @@ public class EditAlarmFragment extends Fragment {
     private void updateAlarms(ArrayList<Alarm> alarms) {
         db.collection("users")
                 .document(mUser.getEmail())
-                .update("alarms", alarms)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), "Alarms updated", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to update alarms", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .update("alarms", alarms);
     }
 
     public interface IEditAlarmFragmentAction {

@@ -39,8 +39,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class AddAlarmFragment extends Fragment {
 
@@ -142,6 +146,9 @@ public class AddAlarmFragment extends Fragment {
                 int minute = Integer.parseInt(minuteStr);
 
                 String message = addAlarmMessageInput.getText().toString();
+                if (message == null || message.equals("")) {
+                    message = "Alarm";
+                }
                 boolean isAm = !addAlarmAMPMSwitch.isChecked();
                 boolean isWakeUpTask = addAlarmWakeUpTaskSwitch.isChecked();
 
@@ -150,7 +157,6 @@ public class AddAlarmFragment extends Fragment {
 
                 Alarm newAlarm = new Alarm(hour, minute, isAm, isWakeUpTask, true, alarmFrequency, message);
                 addAlarmInDatabase(newAlarm);
-                mListener.addAlarmDone();
             }
         });
 
@@ -174,6 +180,9 @@ public class AddAlarmFragment extends Fragment {
         String currentTime = hourStr + ":" + minuteStr;
 
         addAlarmTimeInput.setText(currentTime);
+        addAlarmAMPMSwitch.setChecked(hour > 11);
+        String amOrPm = hour > 11 ? "PM" : "AM";
+        addAlarmAMPMText.setText(amOrPm);
     }
 
     private void showTimePicker() {
@@ -184,6 +193,11 @@ public class AddAlarmFragment extends Fragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (selectedHour == 0) {
+                    selectedHour = 12;
+                } if (selectedHour > 12) {
+                    selectedHour = selectedHour - 12;
+                }
                 String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
                 String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
                 addAlarmTimeInput.setText(selectedHourStr + ":" + selectedMinuteStr);
@@ -215,6 +229,8 @@ public class AddAlarmFragment extends Fragment {
                             ArrayList<Alarm> alarms = user.getAlarms();
                             alarms = insertAlarmIntoSortedAlarms(alarms, newAlarm);
                             updateAlarms(alarms, newAlarm);
+                            newAlarm.schedule(getActivity().getApplicationContext());
+                            mListener.addAlarmDone();
                         }
                     }
                 });
@@ -223,20 +239,7 @@ public class AddAlarmFragment extends Fragment {
     private void updateAlarms(ArrayList<Alarm> alarms, Alarm newAlarm) {
         db.collection("users")
                 .document(mUser.getEmail())
-                .update("alarms", alarms)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), "Alarm added!", Toast.LENGTH_SHORT).show();
-                        newAlarm.schedule(getActivity().getApplicationContext());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to add alarm.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .update("alarms", alarms);
     }
 
     private ArrayList<Alarm> insertAlarmIntoSortedAlarms(ArrayList<Alarm> alarms, Alarm newAlarm) {

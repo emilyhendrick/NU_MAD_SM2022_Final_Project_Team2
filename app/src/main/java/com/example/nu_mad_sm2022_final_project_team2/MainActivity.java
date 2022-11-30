@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void loginDone(FirebaseUser firebaseUser) {
+        currentUser = firebaseUser;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
                 .addToBackStack(null)
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void registerDone(FirebaseUser mUser, Uri avatarUri) {
+        currentUser = mUser;
         if (avatarUri != null) {
             String path = "images/profilePhotos/" + currentUser.getEmail() + "/";
             updateProfilePhotoInFirebase(avatarUri, path);
