@@ -7,11 +7,15 @@
     <string name="login">Log In</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="retype_password">Re-type Password</string>
     <string name="forgotPassword">Forgot Password</string>
     <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
+    <string name="pronouns2">Pronouns</string>
+    <string name="birthday_formatted">Birthday (MM/DD/YYYY)</string>
     <string name="back">Back</string>
     <string name="logoDescription">Logo</string>
+    <string name="uploadAvatar">Upload Profile Photo</string>
 
     // bottom nav bar
     <string name="title_activity_main_app">MainAppActivity</string>
@@ -25,8 +29,12 @@
     // profile
     <string name="profile">Profile</string>
     <string name="name">Name:</string>
+    <string name="first_name">First Name:</string>
+    <string name="last_name">Last Name:</string>
     <string name="pronouns">Pronouns:</string>
     <string name="email2">Email:</string>
+    <string name="password2">Password:</string>
+    <string name="retyped_password">Re-type Password:</string>
     <string name="birthday">Birthday:</string>
     <string name="editProfile">Edit Profile</string>
     <string name="saveProfileChanges">Save Profile Changes</string>
@@ -35,6 +43,7 @@
     // alarm / wake-up task
     <string name="alarm">Alarm</string>
     <string name="editAlarm">Edit Alarm</string>
+    <string name="addAlarm">Add Alarm</string>
     <string name="repeat">Repeat</string>
     <string name="snooze">Snooze</string>
     <string name="wakeUpTask">Wake-Up Task</string>
@@ -51,6 +60,20 @@
     <string name="saturday">S</string>
     <string name="submit">Submit</string>
     <string name="clickLink">Click the link below to go to today\'s Wake-Up Task!</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="message">Message</string>
+    <string name="once">Once</string>
+    <string name="weekly">Weekly</string>
+    <string name="biweekly">Bi-Weekly</string>
+
+
+    // camera
+    <string name="take_photo">Take Photo</string>
+    <string name="flip_camera">Flip Camera</string>
+    <string name="open_photo_gallery">Open Photo Gallery</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

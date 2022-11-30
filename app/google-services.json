@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "709941581864",
+    "project_id": "penciledin-9a242",
+    "storage_bucket": "penciledin-9a242.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709941581864:android:0b17e735fd570cc48c3d1d",
+        "android_client_info": {
+          "package_name": "com.example.nu_mad_sm2022_final_project_team2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709941581864-bs5cq8jn3b11aavp3qme7rgd5t0ju173.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nu_mad_sm2022_final_project_team2",
+            "certificate_hash": "a3daf23dfb9c8ec786d46635f2a394bb1adf9b00"
+          }
+        },
+        {
+          "client_id": "709941581864-eq8s0551qa25414p7fuj5q36vd5dhq3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD62hHbEj755h8PKBeOOJIiXBWoYak2ZE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709941581864-eq8s0551qa25414p7fuj5q36vd5dhq3i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

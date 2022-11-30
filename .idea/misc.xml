@@ -3,12 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1545" />
+        <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1545" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1545" />
+        <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1545" />
+        <entry key="app/src/main/res/drawable/photo_gallery.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/switch_camera.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22217326628856182" />
         <entry key="app/src/main/res/layout/activity_main_app.xml" value="0.2090342203776042" />
         <entry key="app/src/main/res/layout/alarm_row.xml" value="0.27856936247452446" />
-        <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.32971750895182295" />
+        <entry key="app/src/main/res/layout/fragment_add_alarm.xml" value="0.3137345023777174" />
+        <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.2842646280924479" />
         <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.15251719156901042" />
+        <entry key="app/src/main/res/layout/fragment_camera.xml" value="0.30601470504981887" />
+        <entry key="app/src/main/res/layout/fragment_camera2.xml" value="0.1339918946301925" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.13229166666666667" />
+        <entry key="app/src/main/res/layout/fragment_display.xml" value="0.1339918946301925" />
         <entry key="app/src/main/res/layout/fragment_edit_alarm.xml" value="0.29053683073624315" />
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.27055794233729896" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />

@@ -2,24 +2,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/editAlarmLayout"
+    android:id="@+id/addAlarmLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.EditAlarmFragment">
+    tools:context=".alarm.AddAlarmFragment">
 
-    <EditText
-        android:id="@+id/editAlarmMessageInput"
-        android:layout_width="285dp"
+    <RadioGroup
+        android:id="@+id/addAlarmRadioGroup"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="45dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/editAlarmMessageText"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="55dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@+id/addAlarmRepeatText"
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmWakeUpTaskSwitch">
+
+        <RadioButton
+            android:id="@+id/addAlarmOnceOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/once" />
+
+        <RadioButton
+            android:id="@+id/addAlarmDailyOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/daily" />
+
+        <RadioButton
+            android:id="@+id/addAlarmWeeklyOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/weekly" />
+
+        <RadioButton
+            android:id="@+id/addAlarmBiweeklyOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/biweekly" />
+    </RadioGroup>
 
     <TextView
-        android:id="@+id/editAlarmMessageText"
+        android:id="@+id/addAlarmMessageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -28,23 +55,23 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmTimeInput" />
 
     <TextView
-        android:id="@+id/editAlarmTitle"
+        android:id="@+id/addAlarmTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:text="@string/editAlarm"
+        android:text="@string/addAlarm"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/editAlarmLeftArrow"
+        app:layout_constraintStart_toEndOf="@+id/addAlarmLeftArrow"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/editAlarmLeftArrow"
+        android:id="@+id/addAlarmLeftArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -54,7 +81,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editAlarmTimeInput"
+        android:id="@+id/addAlarmTimeInput"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -64,10 +91,10 @@
         android:inputType="time"
         android:textSize="48sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmTitle" />
 
     <Switch
-        android:id="@+id/editAlarmAMPMSwitch"
+        android:id="@+id/addAlarmAMPMSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -75,10 +102,10 @@
         android:scaleX="1.25"
         android:scaleY="1.25"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmLeftArrow" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmLeftArrow" />
 
     <TextView
-        android:id="@+id/editAlarmAMPMText"
+        android:id="@+id/addAlarmAMPMText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -86,10 +113,10 @@
         android:text="AM"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmAMPMSwitch" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmAMPMSwitch" />
 
     <TextView
-        android:id="@+id/editAlarmRepeatText"
+        android:id="@+id/addAlarmRepeatText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -98,10 +125,10 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmWakeUpTaskText" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmWakeUpTaskText" />
 
     <TextView
-        android:id="@+id/editAlarmWakeUpTaskText"
+        android:id="@+id/addAlarmWakeUpTaskText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -110,72 +137,37 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmMessageText" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmMessageText" />
 
     <Button
-        android:id="@+id/editAlarmSaveButton"
+        android:id="@+id/addAlarmSaveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
         android:text="@string/saveAlarm"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmRadioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmRadioGroup" />
 
     <Switch
-        android:id="@+id/editAlarmWakeUpTaskSwitch"
+        android:id="@+id/addAlarmWakeUpTaskSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmMessageInput" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmMessageInput" />
 
-    <RadioGroup
-        android:id="@+id/editAlarmRadioGroup"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/addAlarmMessageInput"
+        android:layout_width="285dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="55dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@+id/editAlarmRepeatText"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmWakeUpTaskSwitch">
-
-        <RadioButton
-            android:id="@+id/editAlarmOnceOption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/once" />
-
-        <RadioButton
-            android:id="@+id/editAlarmDailyOption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/daily" />
-
-        <RadioButton
-            android:id="@+id/editAlarmWeeklyOption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/weekly" />
-
-        <RadioButton
-            android:id="@+id/editAlarmBiweeklyOption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/biweekly" />
-
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/deleteAlarmButton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="45dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/addAlarmMessageText"
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmAMPMText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

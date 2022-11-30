@@ -1,49 +1,52 @@
 package com.example.nu_mad_sm2022_final_project_team2.profile;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
+import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class EditProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ImageView avatar, editProfileBackArrow;
+    private TextView firstNameInput, lastNameInput, pronounsInput, emailInput, birthdayInput, passwordInput, retypedPasswordInput;
+    private Button editAvatarButton, saveChangesButton, editProfileBackButton;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private FirebaseFirestore db;
+    private IEditProfileFragmentAction mListener;
 
-    public EditProfileFragment() {
-        // Required empty public constructor
-    }
+    public EditProfileFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EditProfileFragment newInstance(String param1, String param2) {
+    public static EditProfileFragment newInstance() {
         EditProfileFragment fragment = new EditProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,16 +54,135 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof IEditProfileFragmentAction) {
+            this.mListener = (IEditProfileFragmentAction) context;
+        } else {
+            throw new RuntimeException(context.toString());
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+        firstNameInput = view.findViewById(R.id.editProfileFirstNameInput);
+        lastNameInput = view.findViewById(R.id.editProfileLastNameInput);
+        pronounsInput = view.findViewById(R.id.editProfilePronounsInput);
+        birthdayInput = view.findViewById(R.id.editProfileBirthdayInput);
+        emailInput = view.findViewById(R.id.editProfileEmailInput);
+        passwordInput = view.findViewById(R.id.editProfilePasswordInput);
+        retypedPasswordInput = view.findViewById(R.id.editProfileRetypedPasswordInput);
+        saveChangesButton = view.findViewById(R.id.saveChangesButton);
+        editAvatarButton = view.findViewById(R.id.editAvatarButton);
+        avatar = view.findViewById(R.id.editAvatar);
+        editProfileBackArrow = view.findViewById(R.id.editProfileLeftArrow);
+
+        final ArrayList<Alarm>[] alarms = new ArrayList[]{new ArrayList<Alarm>()};
+
+        final User[] user = new User[1];
+        db.collection("users").document(mUser.getEmail()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        user[0] = documentSnapshot.toObject(User.class);
+                        alarms[0] = user[0].getAlarms();
+
+                        firstNameInput.setText(user[0].getFirstName());
+                        lastNameInput.setText(user[0].getLastName());
+                        pronounsInput.setText(user[0].getPronouns());
+                        emailInput.setText(user[0].getEmail());
+                        birthdayInput.setText(user[0].getBirthday());
+
+                        if (user[0].getAvatarUri() != null) {
+                            Uri avatarUri = Uri.parse(user[0].getAvatarUri());
+                            Glide.with(view)
+                                    .load(avatarUri)
+                                    .centerCrop()
+                                    .into(avatar);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        editProfileBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.editProfileBackArrowClicked();
+            }
+        });
+
+        editAvatarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.editAvatarButtonClicked();
+            }
+        });
+
+        saveChangesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String newFirstName = firstNameInput.getText().toString();
+                String newLastName = lastNameInput.getText().toString();
+                String newPronouns = pronounsInput.getText().toString();
+                String newEmail = emailInput.getText().toString();
+                String newBirthday = birthdayInput.getText().toString();
+
+                User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, user[0].getAvatarUri(), alarms[0]);
+                updateFirebaseUser(getContext(), newUser);
+
+                String newPassword = passwordInput.getText().toString();
+                String newRetypedPassword = retypedPasswordInput.getText().toString();
+
+                if (newPassword.length() > 0 && newPassword.equals(retypedPasswordInput)) {
+                    mUser.updatePassword(newPassword);
+                    mUser.reload();
+                }
+
+                mListener.editProfileDone(mUser);
+            }
+        });
+
+
+        return view;
+    }
+
+    private void updateFirebaseUser(Context context, User updatedUser) {
+        db.collection("users")
+                .document(mUser.getEmail())
+                .set(updatedUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(context,"User updated!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Failed to update user! Try again!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        mUser.reload();
+    }
+
+    public interface IEditProfileFragmentAction {
+        void editProfileBackArrowClicked();
+        void editAvatarButtonClicked();
+        void editProfileDone(FirebaseUser mUser);
     }
 }

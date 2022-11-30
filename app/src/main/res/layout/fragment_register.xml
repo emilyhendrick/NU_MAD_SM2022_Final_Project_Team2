@@ -8,17 +8,55 @@
     android:contentDescription="@string/logoDescription"
     tools:context=".login_flow.RegisterFragment">
 
+    <EditText
+        android:id="@+id/registerBirthdayInput"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/birthday_formatted"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerPronounsInput" />
+
+    <EditText
+        android:id="@+id/registerPronounsInput"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/pronouns2"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerLastNameInput" />
+
+    <EditText
+        android:id="@+id/registerInputRetypedPassword"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/retype_password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerInputPassword" />
+
     <ImageView
         android:id="@+id/registerLogo"
-        android:layout_width="323dp"
+        android:layout_width="100dp"
         android:layout_height="71dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="4dp"
         android:contentDescription="@string/logoDescription"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
@@ -37,14 +75,14 @@
         android:id="@+id/registerFirstNameInput"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/firstName"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/registerAvatar" />
 
     <EditText
         android:id="@+id/registerLastNameInput"
@@ -68,11 +106,12 @@
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerLastNameInput" />
+        app:layout_constraintTop_toBottomOf="@+id/registerBirthdayInput" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/registerInputPassword"
         android:layout_width="300dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
@@ -84,25 +123,47 @@
         app:layout_constraintTop_toBottomOf="@+id/registerInputEmail" />
 
     <Button
-        android:id="@+id/registerScreenRegisterButton"
+        android:id="@+id/registerButton"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="25dp"
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/registerInputRetypedPassword" />
 
     <TextView
         android:id="@+id/registerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="25dp"
         android:text="@string/register"
         android:textColor="#000000"
         android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerLogo" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/registerAvatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/select_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerText" />
+
+    <Button
+        android:id="@+id/registerUploadAvatarButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="90dp"
+        android:text="@string/uploadAvatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
