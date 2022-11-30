@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
 
     <TextView
-        android:id="@+id/editAlarmTitle"
+        android:id="@+id/editTaskTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -64,7 +64,7 @@
         android:inputType="time"
         android:textSize="48sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAlarmTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/editTaskTitle" />
 
     <Switch
         android:id="@+id/editAlarmAMPMSwitch"

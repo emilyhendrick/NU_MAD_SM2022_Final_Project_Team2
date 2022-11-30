@@ -39,6 +39,22 @@
     <string name="editProfile">Edit Profile</string>
     <string name="saveProfileChanges">Save Profile Changes</string>
     <string name="editProfileImage">Edit Profile Image</string>
+    <string name="editStartDate">Start Date:</string>
+    <string name="editEndDate">End Date:</string>
+
+    // task
+    <string name="editTask">Add/Edit Task</string>
+    <string name="taskMame">Task Name:</string>
+    <string name="duration">Duration:</string>
+    <string name="priority">Priority:</string>
+    <string name="startDate">Start Date:</string>
+    <string name="dueDate">Due Date:</string>
+    <string name="event">Event</string>
+    <string name="task">Task</string>
+    <string name="category">Category:</string>
+    <string name="location">Location:</string>
+    <string name="blockers">Blockers:</string>
+    <string name="saveTask">Save Task</string>
 
     // alarm / wake-up task
     <string name="alarm">Alarm</string>
