@@ -169,6 +169,10 @@ public class AddAlarmFragment extends Fragment {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
+        String amOrPm = hour > 11 ? "PM" : "AM";
+        addAlarmAMPMText.setText(amOrPm);
+        addAlarmAMPMSwitch.setChecked(hour > 11);
+
         if (hour == 0) {
             hour = 12;
         } else if (hour > 12) {
@@ -180,9 +184,6 @@ public class AddAlarmFragment extends Fragment {
         String currentTime = hourStr + ":" + minuteStr;
 
         addAlarmTimeInput.setText(currentTime);
-        addAlarmAMPMSwitch.setChecked(hour > 11);
-        String amOrPm = hour > 11 ? "PM" : "AM";
-        addAlarmAMPMText.setText(amOrPm);
     }
 
     private void showTimePicker() {

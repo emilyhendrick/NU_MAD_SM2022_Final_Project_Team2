@@ -45,7 +45,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainActivity extends AppCompatActivity implements WelcomeFragment.IWelcomeFragmentAction, RegisterFragment.IRegisterFragmentAction,
         LoginFragment.ILoginFragmentAction, ProfileFragment.IProfileFragmentAction, CameraFragment.IPhotoTaken, DisplayFragment.RetakePhoto,
         EditProfileFragment.IEditProfileFragmentAction, AlarmFragment.IAlarmFragmentAction, AlarmsAdaptor.IAlarmsListRecyclerAction,
-        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, WakeUpTaskFragment.IWakeUpTaskFragmentAction {
+        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction {
 
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
@@ -91,12 +91,12 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     protected void onStart() {
         super.onStart();
         currentUser = mAuth.getCurrentUser();
-        createNotificationChannnel();
+        createNotificationChannel();
         populateScreen();
 
     }
 
-    private void createNotificationChannnel() {
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
@@ -405,17 +405,4 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
                 .commit();
     }
 
-    @Override
-    public void wakeUpBackButtonClicked() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
-                .addToBackStack(null)
-                .commit();
-    }
-
-    @Override
-    public void wakeUpTaskLinkClicked(String linkStr) {
-        Intent urlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(linkStr));
-        startActivity(urlIntent);
-    }
 }

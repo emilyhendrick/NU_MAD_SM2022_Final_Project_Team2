@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/switch_camera.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22217326628856182" />
         <entry key="app/src/main/res/layout/activity_main_app.xml" value="0.2090342203776042" />
+        <entry key="app/src/main/res/layout/activity_wake_up_task.xml" value="0.22096710205078127" />
         <entry key="app/src/main/res/layout/alarm_row.xml" value="0.27856936247452446" />
         <entry key="app/src/main/res/layout/fragment_add_alarm.xml" value="0.3137345023777174" />
         <entry key="app/src/main/res/layout/fragment_alarm.xml" value="0.2842646280924479" />
