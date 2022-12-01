@@ -98,6 +98,7 @@ public class AlarmFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
 
+        // SET UP RECYCLER VIEW
         alarmsAdaptor = new AlarmsAdaptor(mAlarms, getContext());
         alarmRecyclerView = view.findViewById(R.id.alarmRecyclerView);
         alarmRecyclerViewLayoutManager = new LinearLayoutManager(getContext());

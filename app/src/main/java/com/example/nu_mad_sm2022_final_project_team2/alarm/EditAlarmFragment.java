@@ -116,17 +116,7 @@ public class EditAlarmFragment extends Fragment {
         editAlarmTimeInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int currentHour = calendar.get(Calendar.HOUR);
-                int currentMinute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
-                        String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
-                        editAlarmTimeInput.setText(selectedHour + ":" + selectedMinuteStr);
-                    }
-                }, currentHour, currentMinute, true);
+                showTimePicker();
             }
         });
 
@@ -156,31 +146,14 @@ public class EditAlarmFragment extends Fragment {
                 int minute = Integer.parseInt(minuteStr);
 
                 String message = editAlarmMessageInput.getText().toString();
-                if (message.length() == 0) {
+                if (message == null || message.equals("")) {
                     message = "Alarm";
                 }
                 boolean isAm = !editAlarmAMPMSwitch.isChecked();
                 boolean isWakeUpTask = editAlarmWakeUpTaskSwitch.isChecked();
 
                 int chosenOptionId = radioGroup.getCheckedRadioButtonId();
-                AlarmFrequency alarmFrequency;
-                switch (chosenOptionId) {
-                    case R.id.addAlarmOnceOption:
-                        alarmFrequency = AlarmFrequency.ONCE;
-                        break;
-                    case R.id.addAlarmDailyOption:
-                        alarmFrequency = AlarmFrequency.DAILY;
-                        break;
-                    case R.id.addAlarmWeeklyOption:
-                        alarmFrequency = AlarmFrequency.WEEKLY;
-                        break;
-                    case R.id.addAlarmBiweeklyOption:
-                        alarmFrequency = AlarmFrequency.BIWEEKLY;
-                        break;
-                    default:
-                        alarmFrequency = AlarmFrequency.ONCE;
-                        break;
-                }
+                AlarmFrequency alarmFrequency = getAlarmFrequency(chosenOptionId);
 
                 Alarm newAlarm = new Alarm(hour, minute, isAm, isWakeUpTask, alarm.isOn(), alarmFrequency, message);
                 updateAlarmInDatabase(newAlarm);
@@ -191,25 +164,7 @@ public class EditAlarmFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (alarm.isOn()) {
-                    alarm.cancelAlarm(getActivity().getApplicationContext());
-                }
-
-                db.collection("users")
-                        .document(mUser.getEmail())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    User user = task.getResult().toObject(User.class);
-                                    ArrayList<Alarm> alarms = user.getAlarms();
-                                    alarms.remove(alarm);
-                                    updateAlarms(alarms);
-                                    mListener.editAlarmDone();
-                                }
-                            }
-                        });
+                deleteAlarm();
             }
         });
 
@@ -228,28 +183,69 @@ public class EditAlarmFragment extends Fragment {
         AlarmFrequency alarmFrequency = alarm.getAlarmFrequency();
         switch (alarmFrequency) {
             case ONCE:
-                radioGroup.check(R.id.addAlarmOnceOption);
+                radioGroup.check(R.id.editAlarmOnceOption);
                 break;
             case DAILY:
-                radioGroup.check(R.id.addAlarmDailyOption);
+                radioGroup.check(R.id.editAlarmDailyOption);
                 break;
             case WEEKLY:
-                radioGroup.check(R.id.addAlarmWeeklyOption);
+                radioGroup.check(R.id.editAlarmWeeklyOption);
                 break;
             case BIWEEKLY:
-                radioGroup.check(R.id.addAlarmBiweeklyOption);
+                radioGroup.check(R.id.editAlarmBiweeklyOption);
                 break;
             default:
-                radioGroup.check(R.id.addAlarmOnceOption);
+                radioGroup.check(R.id.editAlarmOnceOption);
                 break;
         }
 
+    }
+
+    private void showTimePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (selectedHour == 0) {
+                    selectedHour = 12;
+                } if (selectedHour > 12) {
+                    selectedHour = selectedHour - 12;
+                }
+                String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
+                String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
+                editAlarmTimeInput.setText(selectedHourStr + ":" + selectedMinuteStr);
+            }
+        }, currentHour, currentMinute, true);
+    }
+
+    private AlarmFrequency getAlarmFrequency(int chosenOptionId) {
+        switch (chosenOptionId) {
+            case R.id.addAlarmOnceOption: return AlarmFrequency.ONCE;
+            case R.id.addAlarmDailyOption: return AlarmFrequency.DAILY;
+            case R.id.addAlarmWeeklyOption: return AlarmFrequency.WEEKLY;
+            case R.id.addAlarmBiweeklyOption: return AlarmFrequency.BIWEEKLY;
+            default: return AlarmFrequency.ONCE;
+        }
     }
 
     private void updateAlarmInDatabase(Alarm newAlarm) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Toast.makeText(getContext(), "Alarms updated!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Failed to update alarms.", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -259,6 +255,30 @@ public class EditAlarmFragment extends Fragment {
                             alarms.set(index, newAlarm);
                             updateAlarms(alarms);
                             newAlarm.schedule(getActivity().getApplicationContext());
+                            mListener.editAlarmDone();
+                        }
+                    }
+                });
+
+    }
+
+    private void deleteAlarm() {
+        db.collection("users")
+                .document(mUser.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            User user = task.getResult().toObject(User.class);
+                            ArrayList<Alarm> alarms = user.getAlarms();
+                            alarms.remove(alarm);
+                            updateAlarms(alarms);
+
+                            if (alarm.isOn()) {
+                                alarm.cancelAlarm(getActivity().getApplicationContext());
+                            }
+
                             mListener.editAlarmDone();
                         }
                     }

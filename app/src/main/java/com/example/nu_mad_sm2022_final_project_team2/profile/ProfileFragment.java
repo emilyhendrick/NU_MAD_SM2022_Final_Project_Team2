@@ -32,7 +32,7 @@ public class ProfileFragment extends Fragment {
 
     private ImageView avatar, profileBackButton;
     private TextView name, pronouns, email, birthday;
-    private Button editProfileButton;
+    private Button editProfileButton, logoutButton;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -79,6 +79,7 @@ public class ProfileFragment extends Fragment {
         avatar = view.findViewById(R.id.profileImage);
         editProfileButton = view.findViewById(R.id.editProfileButton);
         profileBackButton = view.findViewById(R.id.profileLeftArrow);
+        logoutButton = view.findViewById(R.id.logoutButton);
 
         profileBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,26 +95,44 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        final User[] user = new User[1];
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.logoutClicked();
+            }
+        });
 
+        loadProfile(view);
+
+
+        return view;
+    }
+
+    private void loadProfile(View view) {
         db.collection("users").document(mUser.getEmail()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        user[0] = documentSnapshot.toObject(User.class);
+                        User user = documentSnapshot.toObject(User.class);
 
-                        name.setText(user[0].getFirstName() + " " + user[0].getLastName());
-                        pronouns.setText(user[0].getPronouns());
-                        email.setText(user[0].getEmail());
-                        birthday.setText(user[0].getBirthday());
+                        name.setText(user.getFirstName() + " " + user.getLastName());
+                        pronouns.setText(user.getPronouns());
+                        email.setText(user.getEmail());
+                        birthday.setText(user.getBirthday());
 
-                        if (user[0].getAvatarUri() != null) {
-                            Uri avatarUri = Uri.parse(user[0].getAvatarUri());
+                        if (user.getAvatarUri() != null) {
+                            Uri avatarUri = Uri.parse(user.getAvatarUri());
                             Glide.with(view)
                                     .load(avatarUri)
                                     .centerCrop()
                                     .into(avatar);
                         }
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Toast.makeText(getContext(), "Profile loaded!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -122,13 +141,11 @@ public class ProfileFragment extends Fragment {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-        return view;
     }
 
     public interface IProfileFragmentAction {
         void profileBackButtonClicked();
         void editProfileButtonPressed();
+        void logoutClicked();
     }
 }

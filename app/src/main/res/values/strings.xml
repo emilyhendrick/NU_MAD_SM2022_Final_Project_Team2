@@ -41,6 +41,7 @@
     <string name="editProfileImage">Edit Profile Image</string>
     <string name="editStartDate">Start Date:</string>
     <string name="editEndDate">End Date:</string>
+    <string name="logout">Logout</string>
 
     // task
     <string name="editTask">Add/Edit Task</string>

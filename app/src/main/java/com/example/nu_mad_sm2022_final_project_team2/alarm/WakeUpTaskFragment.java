@@ -86,9 +86,6 @@ public class WakeUpTaskFragment extends Fragment {
                 WakeUpTask wakeUpTask = getRandomWakeUpTask();
                 String linkStr = wakeUpTaskLinkMap.get(wakeUpTask);
                 mListener.wakeUpTaskLinkClicked(linkStr);
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse(linkStr));
-//                startActivity(intent);
             }
         });
 
