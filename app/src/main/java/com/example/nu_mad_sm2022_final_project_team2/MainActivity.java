@@ -111,13 +111,8 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     private void populateScreen() {
         if (currentUser != null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
-//                    .addToBackStack(null)
-//                    .commit();
-
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, AlarmFragment.newInstance(),"alarmFragment")
+                    .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
                     .addToBackStack(null)
                     .commit();
         } else {
