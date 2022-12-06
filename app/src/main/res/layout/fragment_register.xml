@@ -76,14 +76,14 @@
         android:id="@+id/registerFirstNameInput"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="@string/firstName"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerAvatar" />
+        app:layout_constraintTop_toBottomOf="@+id/registerUploadAvatarButton" />
 
     <EditText
         android:id="@+id/registerLastNameInput"
@@ -134,37 +134,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerInputRetypedPassword" />
 
-    <TextView
-        android:id="@+id/registerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:text="@string/register"
-        android:textColor="#000000"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/registerAvatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:src="@drawable/select_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerText" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/registerUploadAvatarButton"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="90dp"
+        android:layout_marginTop="10dp"
         android:text="@string/uploadAvatar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerText" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerAvatar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

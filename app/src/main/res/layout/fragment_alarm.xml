@@ -19,19 +19,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/alarmTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/alarm"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/alarmLeftArrow"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/alarmPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,8 +34,8 @@
         android:id="@+id/alarmRecyclerView"
         android:layout_width="400dp"
         android:layout_height="625dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarmTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/alarmLeftArrow" />
 </androidx.constraintlayout.widget.ConstraintLayout>
