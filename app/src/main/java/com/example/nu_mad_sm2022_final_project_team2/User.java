@@ -1,6 +1,6 @@
 package com.example.nu_mad_sm2022_final_project_team2;
 
-import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
+import com.example.nu_mad_sm2022_final_project_team2.ui.alarm.Alarm;
 
 import java.util.ArrayList;
 

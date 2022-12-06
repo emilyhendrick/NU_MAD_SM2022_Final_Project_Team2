@@ -21,11 +21,14 @@
         android:id="@+id/navigation_alarm"
         android:name="com.example.nu_mad_sm2022_final_project_team2.ui.alarm.AlarmFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_alarm" />
+        tools:layout="@layout/fragment_alarm">
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.nu_mad_sm2022_final_project_team2.profile.EditProfileFragment"
+        android:name="com.example.nu_mad_sm2022_final_project_team2.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_edit_profile" />
+        tools:layout="@layout/fragment_profile" />
+
+
 </navigation>

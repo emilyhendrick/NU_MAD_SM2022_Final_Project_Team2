@@ -1,9 +1,6 @@
-package com.example.nu_mad_sm2022_final_project_team2.alarm;
+package com.example.nu_mad_sm2022_final_project_team2.ui.alarm;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,14 +9,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

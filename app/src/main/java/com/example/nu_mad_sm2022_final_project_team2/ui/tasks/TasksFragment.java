@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.databinding.FragmentTasksBinding;
 
 public class TasksFragment extends Fragment {
@@ -18,11 +19,8 @@ public class TasksFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        TasksViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(TasksViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_tasks, container, false);
 
-        binding = FragmentTasksBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
 //
 //        final TextView textView = binding.textDashboard;
 //        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

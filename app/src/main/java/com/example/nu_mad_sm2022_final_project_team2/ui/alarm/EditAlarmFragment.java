@@ -1,8 +1,7 @@
-package com.example.nu_mad_sm2022_final_project_team2.alarm;
+package com.example.nu_mad_sm2022_final_project_team2.ui.alarm;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;

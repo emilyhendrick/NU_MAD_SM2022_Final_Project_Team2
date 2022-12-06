@@ -1,4 +1,4 @@
-package com.example.nu_mad_sm2022_final_project_team2.alarm;
+package com.example.nu_mad_sm2022_final_project_team2.ui.alarm;
 
 public enum AlarmFrequency {
     ONCE("Once"), DAILY("Daily"), WEEKLY("Weekly"), BIWEEKLY("Bi-Weekly");

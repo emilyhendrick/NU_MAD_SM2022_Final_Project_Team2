@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.WakeUpTaskActivity">
+    tools:context=".ui.alarm.WakeUpTaskActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/wakeUpTaskFragmentContainer"
-        android:name="com.example.nu_mad_sm2022_final_project_team2.alarm.WakeUpTaskFragment"
+        android:name="com.example.nu_mad_sm2022_final_project_team2.ui.alarm.WakeUpTaskFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

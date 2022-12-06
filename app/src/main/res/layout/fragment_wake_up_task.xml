@@ -5,7 +5,7 @@
     android:id="@+id/wakeUpTaskLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.WakeUpTaskFragment">
+    tools:context=".ui.alarm.WakeUpTaskFragment">
 
     <TextView
         android:id="@+id/wakeUpTaskPlus"

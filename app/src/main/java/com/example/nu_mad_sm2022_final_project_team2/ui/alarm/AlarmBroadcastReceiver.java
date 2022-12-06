@@ -1,8 +1,6 @@
-package com.example.nu_mad_sm2022_final_project_team2.alarm;
+package com.example.nu_mad_sm2022_final_project_team2.ui.alarm;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

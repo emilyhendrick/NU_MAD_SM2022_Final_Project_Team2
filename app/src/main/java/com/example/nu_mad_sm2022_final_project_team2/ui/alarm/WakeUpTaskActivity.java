@@ -1,4 +1,4 @@
-package com.example.nu_mad_sm2022_final_project_team2.alarm;
+package com.example.nu_mad_sm2022_final_project_team2.ui.alarm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import com.example.nu_mad_sm2022_final_project_team2.MainActivity;
 import com.example.nu_mad_sm2022_final_project_team2.R;
-import com.example.nu_mad_sm2022_final_project_team2.ui.home.HomeFragment;
 
 public class WakeUpTaskActivity extends AppCompatActivity implements WakeUpTaskFragment.IWakeUpTaskFragmentAction {
 
