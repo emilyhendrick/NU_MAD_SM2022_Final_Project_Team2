@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -67,6 +68,9 @@ public class CameraFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
+
+        BottomNavigationView navView = view.findViewById(R.id.nav_view);
+        navView.setVisibility(View.GONE);
 
         previewView = view.findViewById(R.id.preview);
 

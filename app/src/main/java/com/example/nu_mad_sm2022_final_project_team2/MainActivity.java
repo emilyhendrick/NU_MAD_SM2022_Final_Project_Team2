@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AddAlarmFragment;
@@ -136,8 +137,13 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     private void populateScreen() {
         if (currentUser != null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
+//                    .addToBackStack(null)
+//                    .commit();
+
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "homeFragment")
                     .addToBackStack(null)
                     .commit();
         } else {
@@ -158,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void loginDone(FirebaseUser firebaseUser) {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setVisibility(View.VISIBLE);
+
         currentUser = firebaseUser;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
@@ -185,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void registerDone(FirebaseUser mUser, Uri avatarUri) {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setVisibility(View.VISIBLE);
+
         currentUser = mUser;
         if (avatarUri != null) {
             String path = "images/profilePhotos/" + currentUser.getEmail() + "/";
@@ -242,6 +254,9 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void onUploadButtonPressed(Uri imageUri) {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setVisibility(View.VISIBLE);
+
         if (isSetProfilePhotoFromEditProfile) {
             String path = "images/profilePhotos/" + currentUser.getEmail() + "/";
             updateProfilePhotoInFirebase(imageUri, path);
