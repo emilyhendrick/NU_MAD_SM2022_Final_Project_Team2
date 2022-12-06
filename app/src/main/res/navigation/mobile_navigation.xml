@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.nu_mad_sm2022_final_project_team2.ui.alarm.AlarmFragment"
+        android:name="com.example.nu_mad_sm2022_final_project_team2.profile.EditProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_alarm" />
+        tools:layout="@layout/fragment_edit_profile" />
 </navigation>

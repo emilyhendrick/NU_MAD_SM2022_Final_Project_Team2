@@ -38,7 +38,9 @@ public class HomeFragment extends Fragment {
     private CalendarViewAdapter taskAdapter;
     private TextView displayDate;
 
-    public HomeFragment() {}
+    public HomeFragment() {
+        tasks = new ArrayList<Task>();
+    }
 
     public static HomeFragment newInstance(ArrayList<Task> userTasks) {
         HomeFragment fragment = new HomeFragment();
@@ -61,14 +63,8 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.currentDate;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         calendarItems = root.findViewById(R.id.calendarRecyclerView);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
         taskAdapter = new CalendarViewAdapter(tasks);

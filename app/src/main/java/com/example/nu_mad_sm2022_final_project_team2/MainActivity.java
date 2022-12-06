@@ -7,6 +7,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -16,7 +22,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AddAlarmFragment;
@@ -24,17 +30,20 @@ import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFragment;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmsAdaptor;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.EditAlarmFragment;
-import com.example.nu_mad_sm2022_final_project_team2.alarm.WakeUpTaskFragment;
 import com.example.nu_mad_sm2022_final_project_team2.camera.CameraFragment;
 import com.example.nu_mad_sm2022_final_project_team2.camera.DisplayFragment;
+import com.example.nu_mad_sm2022_final_project_team2.databinding.ActivityMainAppBinding;
+import com.example.nu_mad_sm2022_final_project_team2.databinding.ActivityMainBinding;
 import com.example.nu_mad_sm2022_final_project_team2.login_flow.LoginFragment;
 import com.example.nu_mad_sm2022_final_project_team2.login_flow.RegisterFragment;
 import com.example.nu_mad_sm2022_final_project_team2.login_flow.WelcomeFragment;
 import com.example.nu_mad_sm2022_final_project_team2.profile.EditProfileFragment;
 import com.example.nu_mad_sm2022_final_project_team2.profile.ProfileFragment;
 import com.example.nu_mad_sm2022_final_project_team2.ui.home.HomeFragment;
+import com.example.nu_mad_sm2022_final_project_team2.ui.tasks.TasksFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,7 +54,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainActivity extends AppCompatActivity implements WelcomeFragment.IWelcomeFragmentAction, RegisterFragment.IRegisterFragmentAction,
         LoginFragment.ILoginFragmentAction, ProfileFragment.IProfileFragmentAction, CameraFragment.IPhotoTaken, DisplayFragment.RetakePhoto,
         EditProfileFragment.IEditProfileFragmentAction, AlarmFragment.IAlarmFragmentAction, AlarmsAdaptor.IAlarmsListRecyclerAction,
-        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction {
+        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
@@ -58,11 +67,28 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     boolean isSetProfilePhotoFromRegister = false;
     boolean isSetProfilePhotoFromEditProfile = false;
 
+    private BottomNavigationView bottomNavigationView;
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("PenciledIn");
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        NavController navCo = navHostFragment.getNavController();
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_tasks, R.id.navigation_alarm, R.id.navigation_profile)
+                .build();
+       // NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavigationUI.setupActionBarWithNavController(this, navCo, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navCo);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -93,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         currentUser = mAuth.getCurrentUser();
         createNotificationChannel();
         populateScreen();
-
     }
 
     private void createNotificationChannel() {
@@ -112,12 +137,12 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     private void populateScreen() {
         if (currentUser != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
                     .addToBackStack(null)
                     .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, new WelcomeFragment(), "welcomeFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, new WelcomeFragment(), "welcomeFragment")
                     .addToBackStack(null)
                     .commit();
         }
@@ -126,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void loginBackButtonClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new WelcomeFragment(), "welcomeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new WelcomeFragment(), "welcomeFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -135,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void loginDone(FirebaseUser firebaseUser) {
         currentUser = firebaseUser;
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -143,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void uploadAvatarClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, CameraFragment.newInstance(),"cameraFragment")
+                .replace(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
                 .addToBackStack(null)
                 .commit();
         isSetProfilePhotoFromRegister = true;
@@ -153,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void registerBackButtonClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new WelcomeFragment(), "welcomeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new WelcomeFragment(), "welcomeFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -167,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
             updateUserProfilePhoto(avatarUri);
         }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -175,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void onPhotoTaken(Uri imageUri) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, DisplayFragment.newInstance(imageUri),"displayFragment")
+                .replace(R.id.nav_host_fragment_activity_main, DisplayFragment.newInstance(imageUri),"displayFragment")
                 .commit();
     }
 
@@ -201,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
                         Intent data = result.getData();
                         Uri selectedImageUri = data.getData();
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragmentContainer, DisplayFragment.newInstance(selectedImageUri),"displayFragment")
+                                .replace(R.id.nav_host_fragment_activity_main, DisplayFragment.newInstance(selectedImageUri),"displayFragment")
                                 .commit();
                     }
                 }
@@ -211,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void onRetakePressed() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, CameraFragment.newInstance(), "cameraFragment")
+                .replace(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(), "cameraFragment")
                 .commit();
     }
 
@@ -222,11 +247,11 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
             updateProfilePhotoInFirebase(imageUri, path);
             updateUserProfilePhoto(imageUri);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, EditProfileFragment.newInstance(), "editProfileFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(), "editProfileFragment")
                     .commit();
         } else if (isSetProfilePhotoFromRegister) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainer, RegisterFragment.newInstance(imageUri), "registerFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, RegisterFragment.newInstance(imageUri), "registerFragment")
                     .commit();
         }
 
@@ -278,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void profileBackButtonClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -286,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editProfileButtonPressed() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, EditProfileFragment.newInstance(),"editProfileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(),"editProfileFragment")
                 .commit();
     }
 
@@ -300,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editProfileBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new ProfileFragment(), "profileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "profileFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -308,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editAvatarButtonClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, CameraFragment.newInstance(),"cameraFragment")
+                .replace(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
                 .commit();
         isSetProfilePhotoFromRegister = false;
         isSetProfilePhotoFromEditProfile = true;
@@ -318,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editProfileDone(FirebaseUser mUser) {
         mUser.reload();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new ProfileFragment(), "profileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "profileFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -326,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void alarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, new HomeFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -334,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void addAlarmClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, AddAlarmFragment.newInstance(),"addAlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AddAlarmFragment.newInstance(),"addAlarmFragment")
                 .commit();
     }
 
@@ -347,57 +372,74 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, AlarmFragment.newInstance(), "alarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(), "alarmFragment")
                 .commit();
     }
 
     @Override
     public void editAlarmClicked(Alarm alarm, int position) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, EditAlarmFragment.newInstance(alarm, position), "editAlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, EditAlarmFragment.newInstance(alarm, position), "editAlarmFragment")
                 .commit();
     }
 
     @Override
     public void addAlarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, AlarmFragment.newInstance(),"AlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
                 .commit();
     }
 
     @Override
     public void addAlarmDone() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, AlarmFragment.newInstance(),"AlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
                 .commit();
     }
 
     @Override
     public void editAlarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, AlarmFragment.newInstance(),"AlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
                 .commit();
     }
 
     @Override
     public void editAlarmDone() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, AlarmFragment.newInstance(),"AlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
                 .commit();
     }
 
     @Override
     public void registerButtonClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, RegisterFragment.newInstance(null), "registerFragment")
+                .replace(R.id.nav_host_fragment_activity_main, RegisterFragment.newInstance(null), "registerFragment")
                 .commit();
     }
 
     @Override
     public void loginButtonClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, LoginFragment.newInstance(), "loginFragment")
+                .replace(R.id.nav_host_fragment_activity_main, LoginFragment.newInstance(), "loginFragment")
                 .commit();
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+                return true;
+
+            case R.id.navigation_tasks:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TasksFragment()).commit();
+                return true;
+
+            case R.id.navigation_alarm:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new AlarmFragment()).commit();
+                return true;
+        }
+        return false;
+    }
 }
