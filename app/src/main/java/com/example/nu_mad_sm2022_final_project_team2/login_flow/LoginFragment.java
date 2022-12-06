@@ -64,7 +64,7 @@ public class LoginFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        BottomNavigationView navView = view.findViewById(R.id.nav_view);
+        BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
         navView.setVisibility(View.GONE);
 
         emailInput = view.findViewById(R.id.loginInputEmail);

@@ -85,7 +85,7 @@ public class RegisterFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        BottomNavigationView navView = view.findViewById(R.id.nav_view);
+        BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
         navView.setVisibility(View.GONE);
 
         firstNameInput = view.findViewById(R.id.registerFirstNameInput);

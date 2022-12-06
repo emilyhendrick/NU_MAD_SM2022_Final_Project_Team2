@@ -69,7 +69,7 @@ public class CameraFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
-        BottomNavigationView navView = view.findViewById(R.id.nav_view);
+        BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
         navView.setVisibility(View.GONE);
 
         previewView = view.findViewById(R.id.preview);

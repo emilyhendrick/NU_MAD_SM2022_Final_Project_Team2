@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 //                    .commit();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "homeFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, new RegisterFragment(), "homeFragment")
                     .addToBackStack(null)
                     .commit();
         } else {
@@ -254,10 +254,9 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void onUploadButtonPressed(Uri imageUri) {
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        navView.setVisibility(View.VISIBLE);
-
         if (isSetProfilePhotoFromEditProfile) {
+            BottomNavigationView navView = findViewById(R.id.nav_view);
+            navView.setVisibility(View.VISIBLE);
             String path = "images/profilePhotos/" + currentUser.getEmail() + "/";
             updateProfilePhotoInFirebase(imageUri, path);
             updateUserProfilePhoto(imageUri);

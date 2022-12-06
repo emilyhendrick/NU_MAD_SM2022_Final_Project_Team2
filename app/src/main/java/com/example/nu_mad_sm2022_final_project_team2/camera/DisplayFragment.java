@@ -62,7 +62,7 @@ public class DisplayFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display, container, false);
 
-        BottomNavigationView navView = view.findViewById(R.id.nav_view);
+        BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
         navView.setVisibility(View.GONE);
 
         imageViewPhoto = view.findViewById(R.id.imageViewPhoto);
