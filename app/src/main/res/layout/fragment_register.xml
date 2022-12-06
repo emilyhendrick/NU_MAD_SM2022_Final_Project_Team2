@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:contentDescription="@string/logoDescription"
-    tools:context=".login_flow.RegisterFragment">
+    tools:context=".login_flow.RegisterFragment"
+    android:label="@string/register">
 
     <EditText
         android:id="@+id/registerBirthdayInput"

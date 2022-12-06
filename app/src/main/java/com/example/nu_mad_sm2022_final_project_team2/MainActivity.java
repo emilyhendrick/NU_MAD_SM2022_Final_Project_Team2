@@ -248,10 +248,12 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
             updateUserProfilePhoto(imageUri);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(), "editProfileFragment")
+                    .addToBackStack(null)
                     .commit();
         } else if (isSetProfilePhotoFromRegister) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main, RegisterFragment.newInstance(imageUri), "registerFragment")
+                    .addToBackStack(null)
                     .commit();
         }
 
@@ -272,12 +274,6 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new com.google.firebase.storage.OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
                     }
                 });
     }
@@ -312,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editProfileButtonPressed() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(),"editProfileFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -360,6 +357,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addAlarmClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AddAlarmFragment.newInstance(),"addAlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -373,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(), "alarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -387,6 +386,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addAlarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -394,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addAlarmDone() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -401,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editAlarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -408,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editAlarmDone() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -415,6 +418,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void registerButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, RegisterFragment.newInstance(null), "registerFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -422,6 +426,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void loginButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, LoginFragment.newInstance(), "loginFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -429,15 +434,19 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, new HomeFragment()).addToBackStack(null).commit();
                 return true;
 
             case R.id.navigation_tasks:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TasksFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, new TasksFragment()).addToBackStack(null).commit();
                 return true;
 
             case R.id.navigation_alarm:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new AlarmFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance()).addToBackStack(null).commit();
+                return true;
+
+            case R.id.navigation_profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, ProfileFragment.newInstance()).addToBackStack(null).commit();
                 return true;
         }
         return false;

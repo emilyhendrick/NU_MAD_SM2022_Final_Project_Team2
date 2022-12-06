@@ -5,7 +5,8 @@
     android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profile.ProfileFragment">
+    tools:context=".profile.ProfileFragment"
+    android:label="@string/profile">
 
     <ImageView
         android:id="@+id/profileLeftArrow"

@@ -5,7 +5,8 @@
     android:id="@+id/addAlarmLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.AddAlarmFragment">
+    tools:context=".alarm.AddAlarmFragment"
+    android:label="@string/addAlarm">
 
     <RadioGroup
         android:id="@+id/addAlarmRadioGroup"

@@ -5,7 +5,8 @@
     android:id="@+id/editAlarmLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.EditAlarmFragment">
+    tools:context=".alarm.EditAlarmFragment"
+    android:label="@string/editAlarm">
 
     <EditText
         android:id="@+id/editAlarmMessageInput"
