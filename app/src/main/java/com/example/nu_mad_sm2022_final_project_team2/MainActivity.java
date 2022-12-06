@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ import com.example.nu_mad_sm2022_final_project_team2.ui.tasks.TasksFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,7 +57,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainActivity extends AppCompatActivity implements WelcomeFragment.IWelcomeFragmentAction, RegisterFragment.IRegisterFragmentAction,
         LoginFragment.ILoginFragmentAction, ProfileFragment.IProfileFragmentAction, CameraFragment.IPhotoTaken, DisplayFragment.RetakePhoto,
         EditProfileFragment.IEditProfileFragmentAction, AlarmFragment.IAlarmFragmentAction, AlarmsAdaptor.IAlarmsListRecyclerAction,
-        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, BottomNavigationView.OnNavigationItemSelectedListener {
+        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction {
 
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     boolean isSetProfilePhotoFromRegister = false;
     boolean isSetProfilePhotoFromEditProfile = false;
 
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView navigationView;
     private ActivityMainBinding binding;
 
     @Override
@@ -79,16 +82,19 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
-        NavController navCo = navHostFragment.getNavController();
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_tasks, R.id.navigation_alarm, R.id.navigation_profile)
-                .build();
-       // NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navCo, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navCo);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home: navigateHome(); break;
+                    case R.id.navigation_alarm: navigateAlarm(); break;
+                    case R.id.navigation_tasks: navigateTasks(); break;
+                    case R.id.navigation_profile: navigateProfile(); break;
+                }
+                return false;
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -111,6 +117,42 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
                     Manifest.permission.SCHEDULE_EXACT_ALARM
             }, PERMISSIONS_CODE);
         }
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_tasks, R.id.navigation_alarm, R.id.navigation_profile)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    private void navigateHome() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
+                .commit();
+    }
+
+    private void navigateTasks() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, new TasksFragment(), "homeFragment")
+                .commit();
+    }
+
+    private void navigateAlarm() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, new com.example.nu_mad_sm2022_final_project_team2.ui.alarm.AlarmFragment(), "homeFragment")
+                .commit();
+    }
+
+    private void navigateProfile() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "homeFragment")
+                .commit();
     }
 
     @Override
@@ -423,23 +465,5 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, LoginFragment.newInstance(), "loginFragment")
                 .commit();
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navigation_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
-                return true;
-
-            case R.id.navigation_tasks:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new TasksFragment()).commit();
-                return true;
-
-            case R.id.navigation_alarm:
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, new AlarmFragment()).commit();
-                return true;
-        }
-        return false;
     }
 }
