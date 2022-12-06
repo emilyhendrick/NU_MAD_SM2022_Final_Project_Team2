@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DisplayFragment extends Fragment {
 
@@ -60,6 +61,9 @@ public class DisplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display, container, false);
+
+        BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
+        navView.setVisibility(View.GONE);
 
         imageViewPhoto = view.findViewById(R.id.imageViewPhoto);
         buttonRetake = view.findViewById(R.id.buttonRetake);

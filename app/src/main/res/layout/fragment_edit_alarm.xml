@@ -5,7 +5,8 @@
     android:id="@+id/editAlarmLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.EditAlarmFragment">
+    tools:context=".alarm.EditAlarmFragment"
+    android:label="@string/editAlarm">
 
     <EditText
         android:id="@+id/editAlarmMessageInput"
@@ -30,19 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editAlarmTimeInput" />
 
-    <TextView
-        android:id="@+id/editTaskTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/editAlarm"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/editAlarmLeftArrow"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/editAlarmLeftArrow"
         android:layout_width="wrap_content"
@@ -58,13 +46,13 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/editAlarmTimeInputHint"
         android:inputType="time"
         android:textSize="48sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTaskTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/editAlarmLeftArrow" />
 
     <Switch
         android:id="@+id/editAlarmAMPMSwitch"
@@ -116,7 +104,7 @@
         android:id="@+id/editAlarmSaveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="175dp"
         android:text="@string/saveAlarm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

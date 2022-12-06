@@ -20,12 +20,12 @@
     <fragment
         android:id="@+id/navigation_alarm"
         android:name="com.example.nu_mad_sm2022_final_project_team2.ui.alarm.AlarmFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/alarm"
         tools:layout="@layout/fragment_alarm" />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.nu_mad_sm2022_final_project_team2.profile.EditProfileFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/profile"
         tools:layout="@layout/fragment_edit_profile" />
 </navigation>

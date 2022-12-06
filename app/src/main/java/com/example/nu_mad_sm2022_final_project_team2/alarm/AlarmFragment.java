@@ -80,6 +80,7 @@ public class AlarmFragment extends Fragment {
 
             loadData();
         }
+        getActivity().setTitle("Alarms");
     }
 
     @Override

@@ -5,7 +5,8 @@
     android:id="@+id/addAlarmLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".alarm.AddAlarmFragment">
+    tools:context=".alarm.AddAlarmFragment"
+    android:label="@string/addAlarm">
 
     <RadioGroup
         android:id="@+id/addAlarmRadioGroup"
@@ -57,19 +58,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addAlarmTimeInput" />
 
-    <TextView
-        android:id="@+id/addAlarmTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/addAlarm"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/addAlarmLeftArrow"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/addAlarmLeftArrow"
         android:layout_width="wrap_content"
@@ -85,13 +73,13 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/editAlarmTimeInputHint"
         android:inputType="time"
         android:textSize="48sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addAlarmTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/addAlarmLeftArrow" />
 
     <Switch
         android:id="@+id/addAlarmAMPMSwitch"
@@ -143,7 +131,7 @@
         android:id="@+id/addAlarmSaveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="175dp"
         android:text="@string/saveAlarm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

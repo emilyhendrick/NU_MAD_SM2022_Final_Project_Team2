@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1545" />
@@ -10,9 +11,9 @@
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1545" />
         <entry key="app/src/main/res/drawable/photo_gallery.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/switch_camera.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.18927764892578125" />
-        <entry key="app/src/main/res/layout/activity_main_app.xml" value="0.2125925699869792" />
-        <entry key="app/src/main/res/layout/activity_ring.xml" value="0.17552083333333332" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.20253164556962025" />
+        <entry key="app/src/main/res/layout/activity_main_app.xml" value="0.30469004313151044" />
+        <entry key="app/src/main/res/layout/activity_ring.xml" value="0.14311043566362716" />
         <entry key="app/src/main/res/layout/activity_wake_up_task.xml" value="0.22096710205078127" />
         <entry key="app/src/main/res/layout/alarm_row.xml" value="0.27856936247452446" />
         <entry key="app/src/main/res/layout/event_list_item.xml" value="0.28229166666666666" />
@@ -35,7 +36,7 @@
         <entry key="app/src/main/res/layout/fragment_wake_up_task.xml" value="0.2772262279506633" />
         <entry key="app/src/main/res/layout/fragment_welcome.xml" value="0.22987742888621793" />
         <entry key="app/src/main/res/layout/task_list_items.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.17417144775390625" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.2406743367513021" />
       </map>
     </option>
   </component>

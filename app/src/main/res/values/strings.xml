@@ -58,7 +58,7 @@
     <string name="saveTask">Save Task</string>
 
     // alarm / wake-up task
-    <string name="alarm">Alarm</string>
+    <string name="alarm">Alarms</string>
     <string name="editAlarm">Edit Alarm</string>
     <string name="addAlarm">Add Alarm</string>
     <string name="repeat">Repeat</string>

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -25,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AddAlarmFragment;
@@ -200,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void loginDone(FirebaseUser firebaseUser) {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setVisibility(View.VISIBLE);
+
         currentUser = firebaseUser;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
@@ -227,6 +232,9 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void registerDone(FirebaseUser mUser, Uri avatarUri) {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView.setVisibility(View.VISIBLE);
+
         currentUser = mUser;
         if (avatarUri != null) {
             String path = "images/profilePhotos/" + currentUser.getEmail() + "/";
@@ -285,15 +293,19 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void onUploadButtonPressed(Uri imageUri) {
         if (isSetProfilePhotoFromEditProfile) {
+            BottomNavigationView navView = findViewById(R.id.nav_view);
+            navView.setVisibility(View.VISIBLE);
             String path = "images/profilePhotos/" + currentUser.getEmail() + "/";
             updateProfilePhotoInFirebase(imageUri, path);
             updateUserProfilePhoto(imageUri);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(), "editProfileFragment")
+                    .addToBackStack(null)
                     .commit();
         } else if (isSetProfilePhotoFromRegister) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main, RegisterFragment.newInstance(imageUri), "registerFragment")
+                    .addToBackStack(null)
                     .commit();
         }
 
@@ -314,12 +326,6 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnProgressListener(new com.google.firebase.storage.OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                        double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
                     }
                 });
     }
@@ -354,6 +360,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editProfileButtonPressed() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(),"editProfileFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -377,6 +384,10 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
                 .commit();
+
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
+//                .commit();
         isSetProfilePhotoFromRegister = false;
         isSetProfilePhotoFromEditProfile = true;
     }
@@ -402,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addAlarmClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AddAlarmFragment.newInstance(),"addAlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -415,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(), "alarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -429,6 +442,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addAlarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -436,6 +450,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addAlarmDone() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -443,6 +458,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editAlarmBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -450,6 +466,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void editAlarmDone() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(),"AlarmFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -457,6 +474,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void registerButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, RegisterFragment.newInstance(null), "registerFragment")
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -464,6 +482,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void loginButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, LoginFragment.newInstance(), "loginFragment")
+                .addToBackStack(null)
                 .commit();
     }
 }
