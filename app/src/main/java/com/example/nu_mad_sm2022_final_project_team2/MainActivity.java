@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -137,13 +138,8 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     private void populateScreen() {
         if (currentUser != null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
-//                    .addToBackStack(null)
-//                    .commit();
-
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, new RegisterFragment(), "homeFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
                     .addToBackStack(null)
                     .commit();
         } else {
@@ -346,6 +342,10 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
                 .commit();
+
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
+//                .commit();
         isSetProfilePhotoFromRegister = false;
         isSetProfilePhotoFromEditProfile = true;
     }
