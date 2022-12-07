@@ -58,6 +58,7 @@
     <string name="saveTask">Save Task</string>
     <string name="newTask">New Task</string>
     <string name="newEvent">New Event</string>
+    <string name="close">Close</string>
 
     // task /spinner category
     <string-array name="categories_array">

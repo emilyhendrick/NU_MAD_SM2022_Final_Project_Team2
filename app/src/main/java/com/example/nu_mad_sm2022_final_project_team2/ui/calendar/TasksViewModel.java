@@ -1,4 +1,4 @@
-package com.example.nu_mad_sm2022_final_project_team2.ui.tasks;
+package com.example.nu_mad_sm2022_final_project_team2.ui.calendar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -9,28 +9,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
-import com.example.nu_mad_sm2022_final_project_team2.alarm.EditAlarmFragment;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
 import com.example.nu_mad_sm2022_final_project_team2.databinding.FragmentHomeBinding;
 import com.example.nu_mad_sm2022_final_project_team2.R;
-import com.example.nu_mad_sm2022_final_project_team2.ui.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
-    private static ArrayList<Task> tasks;
+    private static ArrayList<ACalendarItem> tasks;
 
     private FragmentHomeBinding binding;
     private RecyclerView calendarItems;
@@ -39,10 +33,10 @@ public class HomeFragment extends Fragment {
     private TextView displayDate;
 
     public HomeFragment() {
-        tasks = new ArrayList<Task>();
+        tasks = new ArrayList<ACalendarItem>();
     }
 
-    public static HomeFragment newInstance(ArrayList<Task> userTasks) {
+    public static HomeFragment newInstance(ArrayList<ACalendarItem> userTasks) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         tasks = userTasks;

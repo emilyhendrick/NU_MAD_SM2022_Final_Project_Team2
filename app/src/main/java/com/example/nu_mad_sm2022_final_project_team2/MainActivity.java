@@ -8,11 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -32,11 +29,15 @@ import android.widget.Toast;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AddAlarmFragment;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFragment;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.EditTaskFragment;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TasksFragment;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.AddTaskFragment;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmsAdaptor;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.EditAlarmFragment;
 import com.example.nu_mad_sm2022_final_project_team2.camera.CameraFragment;
 import com.example.nu_mad_sm2022_final_project_team2.camera.DisplayFragment;
-import com.example.nu_mad_sm2022_final_project_team2.databinding.ActivityMainAppBinding;
 import com.example.nu_mad_sm2022_final_project_team2.databinding.ActivityMainBinding;
 import com.example.nu_mad_sm2022_final_project_team2.login_flow.LoginFragment;
 import com.example.nu_mad_sm2022_final_project_team2.login_flow.RegisterFragment;
@@ -44,7 +45,6 @@ import com.example.nu_mad_sm2022_final_project_team2.login_flow.WelcomeFragment;
 import com.example.nu_mad_sm2022_final_project_team2.profile.EditProfileFragment;
 import com.example.nu_mad_sm2022_final_project_team2.profile.ProfileFragment;
 import com.example.nu_mad_sm2022_final_project_team2.ui.home.HomeFragment;
-import com.example.nu_mad_sm2022_final_project_team2.ui.tasks.TasksFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -59,7 +59,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainActivity extends AppCompatActivity implements WelcomeFragment.IWelcomeFragmentAction, RegisterFragment.IRegisterFragmentAction,
         LoginFragment.ILoginFragmentAction, ProfileFragment.IProfileFragmentAction, CameraFragment.IPhotoTaken, DisplayFragment.RetakePhoto,
         EditProfileFragment.IEditProfileFragmentAction, AlarmFragment.IAlarmFragmentAction, AlarmsAdaptor.IAlarmsListRecyclerAction,
-        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction {
+        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, TasksFragment.ITaskFragmentAction, ItemsAdaptor.ITasksListRecyclerAction, AddTaskFragment.IAddTaskFragmentAction  {
 
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     private void navigateTasks() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, new TasksFragment(), "tasksFragment")
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(), "tasksFragment")
                 .commit();
     }
 
@@ -413,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
                 .commit();
     }
 
+
     @Override
     public void alarmSwitched(Alarm alarm) {
         if (alarm.isOn()) {
@@ -478,6 +479,48 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void loginButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, LoginFragment.newInstance(), "loginFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void taskBackArrowClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, new HomeFragment(), "homeFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void addTaskClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, AddTaskFragment.newInstance(), "addTaskFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+
+
+    @Override
+    public void editTaskClicked(ACalendarItem task, int position) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, EditTaskFragment.newInstance(task, position), "editAlarmFragment")
+                .commit();
+    }
+
+    @Override
+    public void addTaskBackArrowClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"TasksFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void addTaskDone() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"TasksFragment")
                 .addToBackStack(null)
                 .commit();
     }

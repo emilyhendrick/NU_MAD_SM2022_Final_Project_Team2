@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +39,7 @@ public class EditProfileFragment extends Fragment {
     private Button editAvatarButton, saveChangesButton, editProfileBackButton;
 
     private ArrayList<Alarm> alarms = new ArrayList<>();
+    private ArrayList<ACalendarItem> tasks = new ArrayList<>();
     private String avatarUri = null;
 
     private FirebaseAuth mAuth;
@@ -114,7 +116,7 @@ public class EditProfileFragment extends Fragment {
                 String newEmail = emailInput.getText().toString();
                 String newBirthday = birthdayInput.getText().toString();
 
-                User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, avatarUri, alarms);
+                User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, avatarUri, alarms, tasks);
                 updateFirebaseUser(getContext(), newUser);
 
                 String newPassword = passwordInput.getText().toString();

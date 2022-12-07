@@ -211,7 +211,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void addUserToDataBase(Context context, String firstName, String lastName, String pronouns, String birthday, String email) {
-        User user = new User(firstName, lastName, pronouns, birthday, email, new ArrayList<>());
+        User user = new User(firstName, lastName, pronouns, birthday, email, new ArrayList<>(), new ArrayList<>());
 
         db.collection("users")
                 .document(mUser.getEmail())

@@ -8,16 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.nu_mad_sm2022_final_project_team2.R;
-import com.example.nu_mad_sm2022_final_project_team2.ui.tasks.Task;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
 
 import java.util.ArrayList;
 
 
 public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapter.TaskViewHolder> {
 
-    private ArrayList<Task> tasks;
+    private ArrayList<ACalendarItem> tasks;
 
-    public CalendarViewAdapter(ArrayList<Task> tasks) {
+    public CalendarViewAdapter(ArrayList<ACalendarItem> tasks) {
         this.tasks = tasks;
     }
 
@@ -54,10 +54,10 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task curTask = this.tasks.get(position);
+        ACalendarItem curTask = this.tasks.get(position);
 
-        holder.calendarEventName.setText(curTask.getName());
-        holder.calendarEventTime.setText(curTask.getTime());
+        holder.calendarEventName.setText(curTask.getItem_name());
+        holder.calendarEventTime.setText(curTask.getItem_name());
     }
 
     @Override

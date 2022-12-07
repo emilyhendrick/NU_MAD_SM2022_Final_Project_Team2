@@ -5,7 +5,7 @@
     android:id="@+id/editTaskLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tasks.EditTasksFragment"
+    tools:context=".calendar_item.EditTaskFragment"
     tools:layout_editor_absoluteX="-7dp"
     tools:layout_editor_absoluteY="1dp">
 
