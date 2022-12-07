@@ -15,8 +15,8 @@ import java.util.Date;
 class Event extends ACalendarItem {
     private Date end_time;
 
-    public Event(String item_id, String item_name, Date start_date, Date end_time, String category) {
-        super(item_id, item_name, start_date, category);
+    public Event(String item_name, Date start_date, Date end_time, String category) {
+        super(item_name, start_date, category);
         this.end_time = end_time;
     }
 

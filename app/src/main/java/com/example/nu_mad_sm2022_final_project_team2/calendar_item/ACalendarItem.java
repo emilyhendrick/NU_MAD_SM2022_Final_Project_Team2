@@ -12,7 +12,7 @@ public abstract class ACalendarItem implements ICalendarItem{
     String category;
     Boolean isDone;
 
-    public ACalendarItem(String item_id, String item_name, Date start_date, String category) {
+    public ACalendarItem(String item_name, Date start_date, String category) {
         this.item_id = new Random().nextInt(Integer.MAX_VALUE);
         this.item_name = item_name;
         this.start_date = start_date;

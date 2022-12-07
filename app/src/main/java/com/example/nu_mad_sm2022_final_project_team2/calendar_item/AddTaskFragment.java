@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
@@ -136,15 +137,12 @@ public class AddTaskFragment extends Fragment {
         btn_add_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if
-                String timeStr = addAlarmTimeInput.getText().toString();
-                int index = timeStr.indexOf(":");
-                String hourStr = timeStr.substring(0, index);
-                String minuteStr = timeStr.substring(index + 1);
-                int hour = Integer.parseInt(hourStr);
-                int minute = Integer.parseInt(minuteStr);
+                validateInputs(inp_txt_task_name, inp_duration_number,
+                        spin_categories, btn_start_date_date, btn_start_date_time,
+                        btn_due_date_date, btn_due_date_time);
+                String start_date = inp_txt_task_name.getText().toString();
 
-                String message = addAlarmMessageInput.getText().toString();
+                String duration = inp_duration_number.getText().toString();
                 if (message == null || message.equals("")) {
                     message = "No Des";
                 }
@@ -154,7 +152,7 @@ public class AddTaskFragment extends Fragment {
                 int chosenOptionId = radioGroup.getCheckedRadioButtonId();
                 AlarmFrequency alarmFrequency = getAlarmFrequency(chosenOptionId);
 
-                TaskPI newItem = new TaskPI(item)
+                TaskPI newItem = new TaskPI(item_name, start_date, due_date, category);
                 addTaskInDatabase(newItem);
             }
         });
@@ -164,6 +162,24 @@ public class AddTaskFragment extends Fragment {
 
 
     }
+
+
+    private void validateInputs(EditText taskname,
+                                   EditText dur, Spinner cat, Button start_date,
+                                   Button start_time, Button due_date, Button due_time) {
+        if (taskname == null || dur == null ||
+                cat == null || start_date == null  ||
+                start_time == null ||
+                validateDateTime(start_date, start_time) || validateDateTime(due_date, due_time)) {
+            Toast.makeText(getContext(), "You must complete the entire form.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private Boolean validateDateTime(Button bdate, Button btime) {
+        return (bdate.getText().toString() == "Pick Date" || btime.getText().toString() == "Pick Time");
+    }
+
 
     private void showTimePicker(Button btn) {
         Calendar calendar = Calendar.getInstance();
