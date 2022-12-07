@@ -141,19 +141,19 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     private void navigateTasks() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, new TasksFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, new TasksFragment(), "tasksFragment")
                 .commit();
     }
 
     private void navigateAlarm() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, new com.example.nu_mad_sm2022_final_project_team2.ui.alarm.AlarmFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, AlarmFragment.newInstance(), "alarmFragment")
                 .commit();
     }
 
     private void navigateProfile() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "homeFragment")
+                .replace(R.id.nav_host_fragment_activity_main, ProfileFragment.newInstance(), "profileFragment")
                 .commit();
     }
 
@@ -384,10 +384,6 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
                 .commit();
-
-//        getSupportFragmentManager().beginTransaction()
-//                .add(R.id.nav_host_fragment_activity_main, CameraFragment.newInstance(),"cameraFragment")
-//                .commit();
         isSetProfilePhotoFromRegister = false;
         isSetProfilePhotoFromEditProfile = true;
     }

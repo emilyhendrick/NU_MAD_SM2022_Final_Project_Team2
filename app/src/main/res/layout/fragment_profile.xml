@@ -8,6 +8,17 @@
     tools:context=".profile.ProfileFragment"
     android:label="@string/profile">
 
+    <TextView
+        android:id="@+id/profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/profile"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/profileLeftArrow"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/profileLeftArrow"
         android:layout_width="wrap_content"
@@ -147,4 +158,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editProfileButton" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,6 +35,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 
 public class AlarmFragment extends Fragment {
@@ -72,6 +74,8 @@ public class AlarmFragment extends Fragment {
         if (args != null) {
             if (args.containsKey(ARG_ALARMS)) {
                 mAlarms = (ArrayList<Alarm>) args.getSerializable(ARG_ALARMS);
+            } else {
+                mAlarms = new ArrayList<>();
             }
 
             db = FirebaseFirestore.getInstance();
@@ -80,7 +84,6 @@ public class AlarmFragment extends Fragment {
 
             loadData();
         }
-        getActivity().setTitle("Alarms");
     }
 
     @Override
@@ -100,13 +103,13 @@ public class AlarmFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
 
         // SET UP RECYCLER VIEW
-        alarmsAdaptor = new AlarmsAdaptor(mAlarms, getContext());
         alarmRecyclerView = view.findViewById(R.id.alarmRecyclerView);
         alarmRecyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        alarmRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL));
+        alarmsAdaptor = new AlarmsAdaptor(mAlarms, getContext());
         alarmRecyclerView.setLayoutManager(alarmRecyclerViewLayoutManager);
         alarmRecyclerView.setAdapter(alarmsAdaptor);
+        alarmRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                DividerItemDecoration.VERTICAL));
 
         addAlarmButton = view.findViewById(R.id.alarmPlus);
         addAlarmButton.setClickable(true);

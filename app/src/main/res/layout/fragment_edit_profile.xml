@@ -8,6 +8,17 @@
     tools:context=".profile.EditProfileFragment"
     android:label="@string/editProfile">
 
+    <TextView
+        android:id="@+id/editprofile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/editProfile"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/editProfileLeftArrow"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/editProfileRetypedPasswordInput"
         android:layout_width="250dp"
@@ -136,22 +147,21 @@
         android:id="@+id/editAvatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="25dp"
         android:src="@drawable/select_avatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editprofile_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/editAvatarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
         android:text="@string/editProfileImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAvatar" />
+        app:layout_constraintEnd_toStartOf="@+id/editAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/editprofile_title" />
 
     <Button
         android:id="@+id/saveChangesButton"
