@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 import com.example.nu_mad_sm2022_final_project_team2.databinding.FragmentHomeBinding;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 
@@ -24,7 +25,7 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
-    private static ArrayList<ACalendarItem> tasks;
+    private static ArrayList<TaskPI> tasks;
 
     private FragmentHomeBinding binding;
     private RecyclerView calendarItems;
@@ -33,10 +34,10 @@ public class HomeFragment extends Fragment {
     private TextView displayDate;
 
     public HomeFragment() {
-        tasks = new ArrayList<ACalendarItem>();
+        tasks = new ArrayList<TaskPI>();
     }
 
-    public static HomeFragment newInstance(ArrayList<ACalendarItem> userTasks) {
+    public static HomeFragment newInstance(ArrayList<TaskPI> userTasks) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         tasks = userTasks;

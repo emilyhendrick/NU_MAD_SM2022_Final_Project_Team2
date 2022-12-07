@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.Event;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -211,7 +214,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void addUserToDataBase(Context context, String firstName, String lastName, String pronouns, String birthday, String email) {
-        User user = new User(firstName, lastName, pronouns, birthday, email, new ArrayList<>(), new ArrayList<>());
+        User user = new User(firstName, lastName, pronouns, birthday, email, new ArrayList<Alarm>(), new ArrayList<TaskPI>(), new ArrayList<Event>());
 
         db.collection("users")
                 .document(mUser.getEmail())

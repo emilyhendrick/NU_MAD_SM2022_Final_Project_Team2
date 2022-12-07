@@ -23,32 +23,32 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 
-public class ItemsAdaptor extends RecyclerView.Adapter<com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ViewHolder> {
+public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> {
 
-    private ArrayList<ACalendarItem> tasks;
+    private ArrayList<TaskPI> tasks;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore db;
-    private com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ITasksListRecyclerAction mListener;
+    private TasksAdaptor.ITasksListRecyclerAction mListener;
     private static View view;
 
-    public ItemsAdaptor() {}
+    public TasksAdaptor() {}
 
-    public ItemsAdaptor(ArrayList<ACalendarItem> tasks, Context context) {
+    public TasksAdaptor(ArrayList<TaskPI> tasks, Context context) {
         this.tasks = tasks;
-        if (context instanceof com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ITasksListRecyclerAction) {
-            this.mListener = (com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ITasksListRecyclerAction) context;
+        if (context instanceof TasksAdaptor.ITasksListRecyclerAction) {
+            this.mListener = (TasksAdaptor.ITasksListRecyclerAction) context;
         } else {
             throw new RuntimeException(context.toString());
         }
     }
 
-    public ArrayList<ACalendarItem> getItems() {
+    public ArrayList<TaskPI> getItems() {
         return tasks;
     }
 
-    public void setTasks(ArrayList<ACalendarItem> items) {
+    public void setTasks(ArrayList<TaskPI> items) {
         this.tasks = items;
     }
 
@@ -60,8 +60,8 @@ public class ItemsAdaptor extends RecyclerView.Adapter<com.example.nu_mad_sm2022
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
-            alarmTime = itemView.findViewById(R.id.alarmTime);
-            alarmMessage = itemView.findViewById(R.id.alarmMessage);
+            alarmTime = itemView.findViewById(R.id.taskTitle);
+            alarmMessage = itemView.findViewById(R.id.dueDate);
             alarmSwitch = itemView.findViewById(R.id.alarmSwitch);
             alarmLayout = itemView.findViewById(R.id.alarmLayout);
         }
@@ -86,28 +86,28 @@ public class ItemsAdaptor extends RecyclerView.Adapter<com.example.nu_mad_sm2022
 
     @NonNull
     @Override
-    public com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TasksAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemRecyclerView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.alarm_row, parent, false);
+                .inflate(R.layout.task_row, parent, false);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        return new com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ViewHolder(itemRecyclerView);
+        return new TasksAdaptor.ViewHolder(itemRecyclerView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor.ViewHolder holder, int position) {
-        ACalendarItem task = this.tasks.get(position);
+    public void onBindViewHolder(@NonNull TasksAdaptor.ViewHolder holder, int position) {
+        TaskPI task = this.tasks.get(position);
         //holder.getAlarmTime().setText(task.toString() + " " + alarm.getAmOrPm());
         //holder.getAlarmMessage().setText(task.getMessage());
        // holder.getAlarmSwitch().setChecked(task.isOn());
 
     }
 
-    private void updateTaskInDatabase(ACalendarItem newItem, int index) {
+    private void updateTaskInDatabase(TaskPI newItem, int index) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
@@ -116,7 +116,7 @@ public class ItemsAdaptor extends RecyclerView.Adapter<com.example.nu_mad_sm2022
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             User user = task.getResult().toObject(User.class);
-                            ArrayList<ACalendarItem> tasks = user.getTasks();
+                            ArrayList<TaskPI> tasks = user.getTasks();
                             tasks.set(index, newItem);
                             updateTasks(tasks);
                         }
@@ -124,7 +124,7 @@ public class ItemsAdaptor extends RecyclerView.Adapter<com.example.nu_mad_sm2022
                 });
     }
 
-    private void updateTasks(ArrayList<ACalendarItem> tasks) {
+    private void updateTasks(ArrayList<TaskPI> tasks) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .update("tasks", tasks);
@@ -142,7 +142,7 @@ public class ItemsAdaptor extends RecyclerView.Adapter<com.example.nu_mad_sm2022
     }
 
     public interface ITasksListRecyclerAction {
-        void editTaskClicked(ACalendarItem task, int position);
+        void editTaskClicked(TaskPI task, int position);
     }
 }
 

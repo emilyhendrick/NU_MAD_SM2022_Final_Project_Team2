@@ -9,15 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 
 import java.util.ArrayList;
 
 
 public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapter.TaskViewHolder> {
 
-    private ArrayList<ACalendarItem> tasks;
+    private ArrayList<TaskPI> tasks;
 
-    public CalendarViewAdapter(ArrayList<ACalendarItem> tasks) {
+    public CalendarViewAdapter(ArrayList<TaskPI> tasks) {
         this.tasks = tasks;
     }
 

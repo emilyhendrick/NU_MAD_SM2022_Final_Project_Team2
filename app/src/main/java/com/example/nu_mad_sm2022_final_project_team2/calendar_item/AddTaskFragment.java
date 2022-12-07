@@ -261,7 +261,7 @@ public class AddTaskFragment extends Fragment {
 
 
 
-    private void addTaskInDatabase(ACalendarItem newTask) {
+    private void addTaskInDatabase(TaskPI newTask) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
@@ -270,7 +270,7 @@ public class AddTaskFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             User user = task.getResult().toObject(User.class);
-                            ArrayList<ACalendarItem> tasks = user.getTasks();
+                            ArrayList<TaskPI> tasks = user.getTasks();
                             tasks = insertTaskIntoSortedTasks(tasks, newTask);
                             updateTasks(tasks, newTask);
                             newTask.schedule(getActivity().getApplicationContext());
@@ -280,15 +280,20 @@ public class AddTaskFragment extends Fragment {
                 });
     }
 
-    private ArrayList<ACalendarItem> insertTaskIntoSortedTasks(ArrayList<ACalendarItem> tasks, ACalendarItem newTask) {
-        if (tasks.size() == 0) {
-            tasks.add(newTask);
-            return tasks;
+    private ArrayList<TaskPI> insertTaskIntoSortedTasks(ArrayList<TaskPI> tasks, TaskPI newTask) {
+        ArrayList<TaskPI> retTasks;
+        if (tasks == null) {
+            retTasks = new ArrayList<TaskPI>();
+            retTasks.add(newTask);
         }
-   return tasks;
+        else {
+            retTasks = tasks;
+            retTasks.add(newTask);
+        }
+        return retTasks;
     }
 
-    private void updateTasks(ArrayList<ACalendarItem> tasks, ACalendarItem newTask) {
+    private void updateTasks(ArrayList<TaskPI> tasks, ACalendarItem newTask) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .update("tasks", tasks);

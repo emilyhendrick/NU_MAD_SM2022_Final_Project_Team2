@@ -12,6 +12,8 @@ public class TaskPI extends ACalendarItem{
 
     private int duration;
 
+    public TaskPI() {super("", "", "", "");}
+
     public TaskPI(String item_name, Date start_date, Date end_date, String category, int duration) {
         super(item_name, start_date, end_date, category);
         this.duration = duration;

@@ -12,8 +12,10 @@ import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 import java.util.Calendar;
 import java.util.Date;
 
-class Event extends ACalendarItem {
+public class Event extends ACalendarItem {
     private Date end_time;
+
+    public Event() {super("", "", "", "");}
 
     public Event(String item_name, Date start_date, Date end_date, String category) {
         super(item_name, start_date, end_date, category);

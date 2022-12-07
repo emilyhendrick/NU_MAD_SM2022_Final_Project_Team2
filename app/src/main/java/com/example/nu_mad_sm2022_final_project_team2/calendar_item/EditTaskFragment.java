@@ -37,7 +37,7 @@ import java.util.Calendar;
 public class EditTaskFragment extends Fragment {
 
 
-    private static ACalendarItem task;
+    private static TaskPI task;
     private static int index;
 
     private FirebaseAuth mAuth;
@@ -58,7 +58,7 @@ public class EditTaskFragment extends Fragment {
      * @return A new instance of fragment EditTaskFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EditTaskFragment newInstance(ACalendarItem taskArg, int indexArg) {
+    public static EditTaskFragment newInstance(TaskPI taskArg, int indexArg) {
         EditTaskFragment fragment = new EditTaskFragment();
         Bundle args = new Bundle();
         task = taskArg;
@@ -140,7 +140,7 @@ public class EditTaskFragment extends Fragment {
         }, currentHour, currentMinute, true);
     }
 
-    private void updateAlarmInDatabase(ACalendarItem newTask) {
+    private void updateAlarmInDatabase(TaskPI newTask) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
@@ -161,7 +161,7 @@ public class EditTaskFragment extends Fragment {
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             User user = task.getResult().toObject(User.class);
-                            ArrayList<ACalendarItem> tasks = user.getTasks();
+                            ArrayList<TaskPI> tasks = user.getTasks();
                             tasks.set(index, newTask);
                             updateTasks(tasks);
                             newTask.schedule(getActivity().getApplicationContext());
@@ -181,7 +181,7 @@ public class EditTaskFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             User user = task.getResult().toObject(User.class);
-                            ArrayList<ACalendarItem> tasks = user.getTasks();
+                            ArrayList<TaskPI> tasks = user.getTasks();
                             tasks.remove(task);
                             updateTasks(tasks);
 
@@ -191,7 +191,7 @@ public class EditTaskFragment extends Fragment {
                 });
     }
 
-    private void updateTasks(ArrayList<ACalendarItem> tasks) {
+    private void updateTasks(ArrayList<TaskPI>tasks) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .update("tasks", tasks);

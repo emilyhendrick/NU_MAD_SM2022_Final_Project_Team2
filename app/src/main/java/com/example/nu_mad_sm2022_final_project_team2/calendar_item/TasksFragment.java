@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
-import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,14 +37,15 @@ public class TasksFragment extends Fragment {
     private RecyclerView taskRecyclerView;
     private RecyclerView.LayoutManager taskViewLayoutManager;
 
-    private ItemsAdaptor itemsAdaptor;
+    private TasksAdaptor tasksAdaptor;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore db;
     private ITaskFragmentAction mListener;
 
-    private ArrayList<ACalendarItem> mTasks;
+    private ArrayList<TaskPI> mTasks;
+    private ArrayList<Event> mEvents;
 
     public TasksFragment() {
         // Required empty public constructor
@@ -73,7 +73,7 @@ public class TasksFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             if (args.containsKey(ARG_TASKS)) {
-                mTasks = (ArrayList<ACalendarItem>) args.getSerializable(ARG_TASKS);
+                mTasks = (ArrayList<TaskPI>) args.getSerializable(ARG_TASKS);
             }
 
             db = FirebaseFirestore.getInstance();
@@ -102,13 +102,13 @@ public class TasksFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tasks, container, false);
 
         // SET UP RECYCLER VIEW
-        itemsAdaptor = new ItemsAdaptor(mTasks, getContext());
+        tasksAdaptor = new TasksAdaptor(mTasks, getContext());
         taskRecyclerView = view.findViewById(R.id.taskRecyclerView);
         taskViewLayoutManager = new LinearLayoutManager(getContext());
         taskRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL));
         taskRecyclerView.setLayoutManager(taskViewLayoutManager);
-        taskRecyclerView.setAdapter(itemsAdaptor);
+        taskRecyclerView.setAdapter(tasksAdaptor);
 
         addTaskButton = view.findViewById(R.id.taskPlus);
         addTaskButton.setClickable(true);
@@ -122,10 +122,10 @@ public class TasksFragment extends Fragment {
 
         return view;
     }
-    public void updateRecyclerView(ArrayList<ACalendarItem> tasks) {
+    public void updateRecyclerView(ArrayList<TaskPI> tasks) {
         this.mTasks = tasks;
-        itemsAdaptor.setTasks(tasks);
-        itemsAdaptor.notifyDataSetChanged();
+        tasksAdaptor.setTasks(tasks);
+        tasksAdaptor.notifyDataSetChanged();
     }
 
     private void loadData() {
