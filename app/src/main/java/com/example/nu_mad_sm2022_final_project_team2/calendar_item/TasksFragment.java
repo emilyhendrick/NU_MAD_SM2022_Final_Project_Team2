@@ -1,5 +1,6 @@
 package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -81,6 +83,16 @@ public class TasksFragment extends Fragment {
             loadData();
         }
         getActivity().setTitle("Alarms");
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof TasksFragment.ITaskFragmentAction) {
+            this.mListener = (TasksFragment.ITaskFragmentAction) context;
+        } else {
+            throw new RuntimeException(context.toString());
+        }
     }
 
     @Override

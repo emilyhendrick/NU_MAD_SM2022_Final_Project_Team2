@@ -26,13 +26,15 @@
         android:id="@+id/inp_txt_task_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
+        android:hint="@string/taskMame"
         android:inputType="textPersonName"
-        android:text="@string/taskMame"
         android:textColor="#615C5C"
-        app:layout_constraintTop_toBottomOf="@+id/btn_add_task_nav"
-        tools:layout_editor_absoluteX="35dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_task_nav" />
 
     <Spinner
         android:id="@+id/spin_categories"
@@ -42,7 +44,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.165"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inp_duration_number" />
+        app:layout_constraintTop_toBottomOf="@+id/inp_duration_number"
+        android:entries="@array/categories_array" />
 
     <Button
         android:id="@+id/btn_add_task"
@@ -55,7 +58,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spin_categories"
-        app:layout_constraintVertical_bias="0.861" />
+        app:layout_constraintVertical_bias="0.862" />
 
     <Button
         android:id="@+id/btn_add_event"
@@ -80,60 +83,91 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_start_date"
+    <Switch
+        android:id="@+id/start_date_am_pm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/startDate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spin_categories" />
-
-    <Button
-        android:id="@+id/btn_due_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="96dp"
-        android:text="@string/dueDate"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:text="am/pm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/btn_start_date"
-        app:layout_constraintTop_toBottomOf="@+id/spin_categories" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <DatePicker
-        android:id="@+id/pick_date"
-        android:layout_width="352dp"
-        android:layout_height="348dp"
+    <Button
+        android:id="@+id/btn_start_date_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:layout_weight="4"
-        android:calendarViewShown="true"
-        android:spinnersShown="false"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/pickDate"
+        app:layout_constraintEnd_toStartOf="@+id/btn_start_date_time"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TimePicker
-        android:id="@+id/pick_time"
-        android:layout_width="346dp"
-        android:layout_height="350dp"
-        android:layout_marginBottom="144dp"
-        android:layout_weight="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pick_date"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/btn_close_start"
+        android:id="@+id/btn_start_date_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/close"
-        tools:layout_editor_absoluteX="289dp"
-        tools:layout_editor_absoluteY="766dp" />
+        android:layout_marginTop="28dp"
+        android:text="@string/pickTime"
+        app:layout_constraintEnd_toStartOf="@+id/start_date_am_pm"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_start_date_date"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/editStartDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.092"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spin_categories" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/dueDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_date_date" />
+
+    <Switch
+        android:id="@+id/due_date_am_pm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="am/pm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_due_date_time"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/btn_due_date_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="pickDate"
+        app:layout_constraintEnd_toStartOf="@+id/btn_due_date_time"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/btn_due_date_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/pickTime"
+        app:layout_constraintEnd_toStartOf="@+id/due_date_am_pm"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn_due_date_date"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

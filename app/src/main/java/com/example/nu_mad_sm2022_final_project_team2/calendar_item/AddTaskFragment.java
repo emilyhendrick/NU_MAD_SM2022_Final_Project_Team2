@@ -1,5 +1,7 @@
 package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -13,11 +15,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,9 +28,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,8 +43,9 @@ public class AddTaskFragment extends Fragment {
     private FirebaseFirestore db;
     private AddTaskFragment.IAddTaskFragmentAction mListener;
 
-    private Button btn_add_event, btn_add_task, btn_set_start_date, btn_set_due_date, btn_close_start;
+    private Button btn_add_event, btn_add_task, btn_add_task_nav,  btn_start_date_date, btn_due_date_date, btn_start_date_time, btn_due_date_time;
     private EditText inp_txt_task_name, inp_duration_number, inp_start_date, inp_due_date;
+    private Switch start_date_am_pm, due_date_am_pm;
     private DatePicker pick_date;
     private TimePicker pick_time;
     private Spinner spin_categories;
@@ -76,6 +79,8 @@ public class AddTaskFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
+
     }
 
     @Override
@@ -84,30 +89,73 @@ public class AddTaskFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_task, container, false);
         // btn_set_start_date, btn_set_due_date;
-        pick_time = view.findViewById(R.id.pick_time);
-        pick_date = view.findViewById(R.id.pick_date);
-        btn_set_start_date = view.findViewById(R.id.btn_start_date);
-        btn_close_start = view.findViewById(R.id.btn_close_start);
+        btn_start_date_date = view.findViewById(R.id.btn_start_date_date);
+        btn_due_date_date = view.findViewById(R.id.btn_due_date_date);
+        btn_start_date_time= view.findViewById(R.id.btn_start_date_time);
+        btn_due_date_time = view.findViewById(R.id.btn_due_date_time);
+        btn_add_task_nav = view.findViewById(R.id.btn_add_task_nav);
+        start_date_am_pm = view.findViewById(R.id.start_date_am_pm);
+        due_date_am_pm = view.findViewById(R.id.due_date_am_pm);
+        btn_add_task = view.findViewById(R.id.btn_add_task);
 
-        pick_time.setVisibility(View.INVISIBLE);
-        pick_date.setVisibility(View.INVISIBLE);
+
+        // spinner
+        Spinner cat = view.findViewById(R.id.spin_categories);
 
 
 
-        btn_set_start_date.setOnClickListener(new View.OnClickListener() {
+        btn_start_date_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pick_time.setVisibility(View.VISIBLE);
-                pick_date.setVisibility(View.VISIBLE);
+                showTimePicker(btn_start_date_time);
             }
         });
 
-        btn_close_start.setOnClickListener(new View.OnClickListener() {
+        btn_due_date_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // btn_set_start_date, btn_set_due_date;
-                pick_time.setVisibility(View.INVISIBLE);
-                pick_date.setVisibility(View.INVISIBLE);
+                showTimePicker(btn_due_date_time);
+            }
+        });
+
+        btn_start_date_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePicker(btn_start_date_date);
+            }
+        });
+
+        btn_due_date_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePicker(btn_due_date_date);
+            }
+        });
+
+
+        btn_add_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if
+                String timeStr = addAlarmTimeInput.getText().toString();
+                int index = timeStr.indexOf(":");
+                String hourStr = timeStr.substring(0, index);
+                String minuteStr = timeStr.substring(index + 1);
+                int hour = Integer.parseInt(hourStr);
+                int minute = Integer.parseInt(minuteStr);
+
+                String message = addAlarmMessageInput.getText().toString();
+                if (message == null || message.equals("")) {
+                    message = "No Des";
+                }
+                boolean isAm = !addAlarmAMPMSwitch.isChecked();
+                boolean isWakeUpTask = addAlarmWakeUpTaskSwitch.isChecked();
+
+                int chosenOptionId = radioGroup.getCheckedRadioButtonId();
+                AlarmFrequency alarmFrequency = getAlarmFrequency(chosenOptionId);
+
+                TaskPI newItem = new TaskPI(item)
+                addTaskInDatabase(newItem);
             }
         });
 
@@ -116,6 +164,58 @@ public class AddTaskFragment extends Fragment {
 
 
     }
+
+    private void showTimePicker(Button btn) {
+        Calendar calendar = Calendar.getInstance();
+        int currentHour = calendar.get(Calendar.HOUR);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                if (selectedHour == 0) {
+                    selectedHour = 12;
+                } if (selectedHour > 12) {
+                    selectedHour = selectedHour - 12;
+                }
+                String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
+                String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
+                btn.setText(selectedHourStr + ":" + selectedMinuteStr + " ");
+            }
+        }, currentHour, currentMinute, true);
+
+        timePickerDialog.show();
+    }
+
+
+    private String getAMPM(Switch ampm) {
+        if (ampm.isChecked()) {
+            return "am";
+        }
+        else {
+            return "pm";
+        }
+    }
+    private void showDatePicker(Button btn) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                String selectedYear = String.valueOf(year);
+                String selectedMonth = String.valueOf(monthOfYear);
+                String selectedDay = String.valueOf(dayOfMonth);
+                btn.setText(selectedMonth + "/" + selectedDay + "/" + selectedYear);
+            }
+        }, currentYear, currentMonth, currentDay);
+
+        datePickerDialog.show();
+    }
+
+
 
     private void addTaskInDatabase(ACalendarItem newTask) {
         db.collection("users")

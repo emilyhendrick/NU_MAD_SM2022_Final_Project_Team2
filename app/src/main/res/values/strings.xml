@@ -58,6 +58,8 @@
     <string name="saveTask">Save Task</string>
     <string name="newTask">New Task</string>
     <string name="newEvent">New Event</string>
+    <string name="pickDate">Pick Date</string>
+    <string name="pickTime">Pick Time</string>
     <string name="close">Close</string>
 
     // task /spinner category

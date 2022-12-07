@@ -39,7 +39,7 @@ class Event extends ACalendarItem {
     @Override
     public void schedule(Context applicationContext) {
 
-        Toast.makeText(applicationContext, "Task added!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(applicationContext, "TaskPI added!", Toast.LENGTH_SHORT).show();
     }
 
 }

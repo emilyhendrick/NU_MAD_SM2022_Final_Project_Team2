@@ -5,11 +5,11 @@ import android.widget.Toast;
 
 import java.util.Date;
 
-public class Task extends ACalendarItem{
+public class TaskPI extends ACalendarItem{
 
     private Date due_date;
 
-    public Task(String item_id, String item_name, Date start_date, Date due_date, String category) {
+    public TaskPI(String item_id, String item_name, Date start_date, Date due_date, String category) {
         super(item_id, item_name, start_date, category);
         this.due_date = due_date;
     }
@@ -32,6 +32,6 @@ public class Task extends ACalendarItem{
 
     @Override
     public void schedule(Context applicationContext) {
-        Toast.makeText(applicationContext, "Task added!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(applicationContext, "TaskPI added!", Toast.LENGTH_SHORT).show();
     }
 }
