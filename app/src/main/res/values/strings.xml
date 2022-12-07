@@ -56,6 +56,18 @@
     <string name="location">Location:</string>
     <string name="blockers">Blockers:</string>
     <string name="saveTask">Save Task</string>
+    <string name="newTask">New Task</string>
+    <string name="newEvent">New Event</string>
+
+    // task /spinner category
+    <string-array name="categories_array">
+        <item>Self-Care</item>
+        <item>Work</item>
+        <item>School</item>
+        <item>Home</item>
+        <item>Social</item>
+        <item>Family</item>
+    </string-array>
 
     // alarm / wake-up task
     <string name="alarm">Alarms</string>
