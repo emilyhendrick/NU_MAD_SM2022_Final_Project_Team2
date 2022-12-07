@@ -119,6 +119,7 @@ public class TasksFragment extends Fragment {
             }
         });
 
+
         return view;
     }
     public void updateRecyclerView(ArrayList<ACalendarItem> tasks) {

@@ -62,6 +62,14 @@
     <string name="pickTime">Pick Time</string>
     <string name="close">Close</string>
 
+    // event
+    <string name="editEvent">Add/Edit Event</string>
+    <string name="eventName">Event Name:</string>
+    <string name="eventLocation">Location:</string>
+    <string name="saveEvent">Save Event</string>
+    <string name="startTime">Start Time:</string>
+    <string name="endTime">End Time:</string>
+
     // task /spinner category
     <string-array name="categories_array">
         <item>Self-Care</item>

@@ -30,6 +30,7 @@ import com.example.nu_mad_sm2022_final_project_team2.alarm.AddAlarmFragment;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFragment;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.AddEventFragment;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.EditTaskFragment;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ItemsAdaptor;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TasksFragment;
@@ -59,7 +60,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainActivity extends AppCompatActivity implements WelcomeFragment.IWelcomeFragmentAction, RegisterFragment.IRegisterFragmentAction,
         LoginFragment.ILoginFragmentAction, ProfileFragment.IProfileFragmentAction, CameraFragment.IPhotoTaken, DisplayFragment.RetakePhoto,
         EditProfileFragment.IEditProfileFragmentAction, AlarmFragment.IAlarmFragmentAction, AlarmsAdaptor.IAlarmsListRecyclerAction,
-        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, TasksFragment.ITaskFragmentAction, ItemsAdaptor.ITasksListRecyclerAction, AddTaskFragment.IAddTaskFragmentAction  {
+        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, TasksFragment.ITaskFragmentAction, ItemsAdaptor.ITasksListRecyclerAction, AddTaskFragment.IAddTaskFragmentAction, AddEventFragment.IAddEventFragmentAction {
 
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
@@ -521,6 +522,22 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addTaskDone() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"TasksFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void addEventButtonClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, AddEventFragment.newInstance(), "addEventFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void addTaskButtonClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, AddTaskFragment.newInstance(), "addTaskFragment")
                 .addToBackStack(null)
                 .commit();
     }

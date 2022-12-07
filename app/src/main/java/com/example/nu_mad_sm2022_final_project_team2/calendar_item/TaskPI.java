@@ -10,12 +10,15 @@ import java.util.Random;
 
 public class TaskPI extends ACalendarItem{
 
-    private Date due_date;
     private int duration;
 
-    public TaskPI(String item_name, Date start_date, Date due_date, String category, int duration) {
-        super(item_name, start_date, category);
-        this.due_date = due_date;
+    public TaskPI(String item_name, Date start_date, Date end_date, String category, int duration) {
+        super(item_name, start_date, end_date, category);
+        this.duration = duration;
+    }
+
+    public TaskPI(String item_name, String start_date, String end_date, String category, int duration) {
+        super(item_name, start_date, end_date, category);
         this.duration = duration;
     }
 

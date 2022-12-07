@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,11 @@ public class AddTaskFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_task, container, false);
         // btn_set_start_date, btn_set_due_date;
         btn_start_date_date = view.findViewById(R.id.btn_start_date_date);
+        ViewGroup mContainer = container;
+        int id = ((View) mContainer.getParent().getParent()).getId();
+        String t = Integer.toString(id);
+        Log.d("idishereisthetag", t);
+        Toast.makeText(getContext(), t, Toast.LENGTH_SHORT).show();
         btn_due_date_date = view.findViewById(R.id.btn_due_date_date);
         btn_start_date_time= view.findViewById(R.id.btn_start_date_time);
         btn_due_date_time = view.findViewById(R.id.btn_due_date_time);
@@ -98,10 +104,13 @@ public class AddTaskFragment extends Fragment {
         start_date_am_pm = view.findViewById(R.id.start_date_am_pm);
         due_date_am_pm = view.findViewById(R.id.due_date_am_pm);
         btn_add_task = view.findViewById(R.id.btn_add_task);
+        inp_txt_task_name = view.findViewById(R.id.inp_txt_task_name);
+        inp_duration_number = view.findViewById(R.id.inp_duration_number);
+        btn_add_event = view.findViewById(R.id.btn_add_event);
 
 
         // spinner
-        Spinner cat = view.findViewById(R.id.spin_categories);
+        Spinner spin_categories = view.findViewById(R.id.spin_categories);
 
 
 
@@ -134,28 +143,43 @@ public class AddTaskFragment extends Fragment {
         });
 
 
+
         btn_add_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateInputs(inp_txt_task_name, inp_duration_number,
+
+                if (validateInputs(inp_txt_task_name, inp_duration_number,
                         spin_categories, btn_start_date_date, btn_start_date_time,
-                        btn_due_date_date, btn_due_date_time);
-                String start_date = inp_txt_task_name.getText().toString();
-
-                String duration = inp_duration_number.getText().toString();
-                if (message == null || message.equals("")) {
-                    message = "No Des";
+                        btn_due_date_date, btn_due_date_time)) {
+                    String item_name = inp_txt_task_name.getText().toString();
+                    String start_date = btn_start_date_date.getText().toString();
+                    String due_date = btn_due_date_date.getText().toString();
+                    String start_time = btn_start_date_time.getText().toString();
+                    String due_time = btn_due_date_time.getText().toString();
+                    String category = spin_categories.getSelectedItem().toString();
+                    int duration = Integer.parseInt(inp_duration_number.getText().toString());
+                    String startDateTime = start_date + "T" + start_time;
+                    String dueDateTime = due_date + "T" + due_time;
+                    TaskPI newItem = new TaskPI(item_name, startDateTime, dueDateTime, category, duration);
+                    addTaskInDatabase(newItem);
                 }
-                boolean isAm = !addAlarmAMPMSwitch.isChecked();
-                boolean isWakeUpTask = addAlarmWakeUpTaskSwitch.isChecked();
+                else {
+                    String toast = inp_txt_task_name.getText().toString();
+                    Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "You must complete the entire form.", Toast.LENGTH_SHORT).show();
+                }
 
-                int chosenOptionId = radioGroup.getCheckedRadioButtonId();
-                AlarmFrequency alarmFrequency = getAlarmFrequency(chosenOptionId);
-
-                TaskPI newItem = new TaskPI(item_name, start_date, due_date, category);
-                addTaskInDatabase(newItem);
             }
         });
+
+        btn_add_event = view.findViewById(R.id.btn_add_event);
+        btn_add_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.addEventButtonClicked();
+            }
+        });
+
 
         return view;
 
@@ -164,15 +188,18 @@ public class AddTaskFragment extends Fragment {
     }
 
 
-    private void validateInputs(EditText taskname,
+    private Boolean validateInputs(EditText taskname,
                                    EditText dur, Spinner cat, Button start_date,
                                    Button start_time, Button due_date, Button due_time) {
-        if (taskname == null || dur == null ||
+        Log.d("valTaskname", String.valueOf(taskname==null));
+        Log.d("valDur", String.valueOf(dur==null));
+        Log.d("valCat", String.valueOf(cat==null));
+        Log.d("valStartDate", String.valueOf(start_date==null));
+        Log.d("valStartTime", String.valueOf(start_time==null));
+        return !(taskname == null || dur == null ||
                 cat == null || start_date == null  ||
                 start_time == null ||
-                validateDateTime(start_date, start_time) || validateDateTime(due_date, due_time)) {
-            Toast.makeText(getContext(), "You must complete the entire form.", Toast.LENGTH_SHORT).show();
-        }
+                validateDateTime(start_date, start_time) || validateDateTime(due_date, due_time));
 
     }
 
@@ -189,6 +216,7 @@ public class AddTaskFragment extends Fragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                String amOrPm = selectedHour < 12 ? "AM" : "PM";
                 if (selectedHour == 0) {
                     selectedHour = 12;
                 } if (selectedHour > 12) {
@@ -196,7 +224,7 @@ public class AddTaskFragment extends Fragment {
                 }
                 String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
                 String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
-                btn.setText(selectedHourStr + ":" + selectedMinuteStr + " ");
+                btn.setText(selectedHourStr + ":" + selectedMinuteStr + " " + amOrPm);
             }
         }, currentHour, currentMinute, true);
 
@@ -268,6 +296,7 @@ public class AddTaskFragment extends Fragment {
 
     public interface IAddTaskFragmentAction {
         void addTaskBackArrowClicked();
+        void addEventButtonClicked();
         void addTaskDone();
     }
 }
