@@ -19,16 +19,12 @@ import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
-import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.Event;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -92,7 +88,7 @@ public class EditProfileFragment extends Fragment {
         saveChangesButton = view.findViewById(R.id.saveChangesButton);
         editAvatarButton = view.findViewById(R.id.editAvatarButton);
         avatar = view.findViewById(R.id.editAvatar);
-        editProfileBackArrow = view.findViewById(R.id.editProfileLeftArrow);
+        editProfileBackArrow = view.findViewById(R.id.editTaskLeftArrow);
 
         loadProfile(view);
 

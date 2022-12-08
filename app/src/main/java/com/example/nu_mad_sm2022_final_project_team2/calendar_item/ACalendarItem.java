@@ -2,12 +2,14 @@ package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
 import android.content.Context;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public abstract class ACalendarItem implements ICalendarItem{
     static SimpleDateFormat EXP_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy'T'hh:mm aa");
@@ -65,8 +67,9 @@ public abstract class ACalendarItem implements ICalendarItem{
     public String getEnd_date_asString() {
         LocalDateTime ldt = LocalDateTime.now();
         Date now = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        long diff = end_date.getTime() - now.getTime();;
-        return "due in " + String.valueOf(diff) + " days";
+        long diff = now.getTime() - end_date.getTime();
+        long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        return "due in " + String.valueOf(diffDays) + " days";
     }
 
     public void setEnd_date(Date end_date) {
@@ -87,6 +90,17 @@ public abstract class ACalendarItem implements ICalendarItem{
 
     public void setDone(Boolean done) {
         isDone = done;
+    }
+
+    public String dateToDateString(Date d){
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String strDate = dateFormat.format(d);
+        return strDate;
+    }
+    public String timeToTimeString(Date t){
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+        String strDate = dateFormat.format(t);
+        return strDate;
     }
 
 }

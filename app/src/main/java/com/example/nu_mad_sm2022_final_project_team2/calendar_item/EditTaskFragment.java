@@ -1,5 +1,6 @@
 package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,12 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,7 +51,8 @@ public class EditTaskFragment extends Fragment {
     private EditTaskFragment.IEditTaskFragmentAction mListener;
 
     private EditText editTaskNameInput, editDurationInput, editPriorityInput, editCategoryInput, taskLocationInput, taskBlockerInput, editTextStartDate, editEndDate;
-    private Button saveChangesButton;
+    private Button saveChangesButton, btn_start_date, btn_due_date, btn_start_time, btn_due_time;
+    private ImageView editTaskLeftArrow;
 
     public EditTaskFragment() {
         // Required empty public constructor
@@ -96,33 +101,72 @@ public class EditTaskFragment extends Fragment {
         editTaskNameInput = view.findViewById(R.id.editTaskNameInput);
         editDurationInput = view.findViewById(R.id.editDurationInput);
         saveChangesButton = view.findViewById(R.id.saveChangesButton);
+        btn_due_date = view.findViewById(R.id.btn_due_date);
+        btn_due_time = view.findViewById(R.id.btn_due_time);
+        btn_start_date = view.findViewById(R.id.btn_start_date);
+        btn_start_time = view.findViewById(R.id.btn_start_time);
+        editTaskLeftArrow = view.findViewById(R.id.editTaskLeftArrow);
+        populateExistingTask();
 
-        editTextStartDate.setOnClickListener(new View.OnClickListener() {
+        btn_start_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showTimePicker(editTextStartDate);
+                showTimePicker(btn_start_time);
             }
         });
 
-        editEndDate.setClickable(true);
-        editEndDate.setOnClickListener(new View.OnClickListener() {
+        btn_due_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showTimePicker(editEndDate);
+                showTimePicker(btn_due_time);
             }
         });
+
+        btn_due_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePicker(btn_due_date);
+            }
+        });
+
+        btn_start_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePicker(btn_start_date);
+            }
+        });
+
+        editTaskLeftArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.editTaskBackArrowClicked();
+            }
+        });
+
 
         return view;
     }
 
+    private void populateExistingTask() {
+        editTaskNameInput.setText(task.getItem_name());
+        editDurationInput.setText(Integer.toString(task.getDuration()));
+        btn_start_time.setText(task.dateToDateString(task.getStart_date()));
+        btn_start_date.setText(task.timeToTimeString(task.getStart_date()));
+        btn_due_date.setText(task.dateToDateString(task.getEnd_date()));
+        btn_due_time.setText(task.timeToTimeString(task.getEnd_date()));
 
-    private void showTimePicker(EditText changed) {
+    }
+
+
+    private void showTimePicker(Button btn) {
         Calendar calendar = Calendar.getInstance();
         int currentHour = calendar.get(Calendar.HOUR);
         int currentMinute = calendar.get(Calendar.MINUTE);
+
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                String amOrPm = selectedHour < 12 ? "AM" : "PM";
                 if (selectedHour == 0) {
                     selectedHour = 12;
                 } if (selectedHour > 12) {
@@ -130,9 +174,30 @@ public class EditTaskFragment extends Fragment {
                 }
                 String selectedHourStr = selectedHour < 10 ? "0" + selectedHour : String.valueOf(selectedHour);
                 String selectedMinuteStr = selectedMinute < 10 ? "0" + selectedMinute : String.valueOf(selectedMinute);
-                changed.setText(selectedHourStr + ":" + selectedMinuteStr);
+                btn.setText(selectedHourStr + ":" + selectedMinuteStr + " " + amOrPm);
             }
         }, currentHour, currentMinute, true);
+
+        timePickerDialog.show();
+    }
+
+    private void showDatePicker(Button btn) {
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                String selectedYear = String.valueOf(year);
+                String selectedMonth = String.valueOf(monthOfYear);
+                String selectedDay = String.valueOf(dayOfMonth);
+                btn.setText(selectedMonth + "/" + selectedDay + "/" + selectedYear);
+            }
+        }, currentYear, currentMonth, currentDay);
+
+        datePickerDialog.show();
     }
 
     private void updateTaskInDatabase(TaskPI newTask) {
@@ -194,6 +259,7 @@ public class EditTaskFragment extends Fragment {
 
 
     public interface IEditTaskFragmentAction {
+        void editTaskBackArrowClicked();
         void editTaskDone();
     }
 }

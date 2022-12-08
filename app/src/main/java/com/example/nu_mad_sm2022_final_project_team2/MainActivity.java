@@ -543,6 +543,14 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     }
 
     @Override
+    public void editTaskBackArrowClicked() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"TasksFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
     public void editTaskDone() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"TaskFragment")

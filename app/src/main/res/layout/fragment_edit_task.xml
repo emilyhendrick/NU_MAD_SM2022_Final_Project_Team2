@@ -26,22 +26,22 @@
         android:id="@+id/saveChangesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
         android:text="@string/saveTask"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_due_time" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_due_time"
+        app:layout_constraintVertical_bias="0.828" />
 
     <EditText
         android:id="@+id/editTaskNameInput"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="76dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editProfileTitle" />
 
@@ -49,15 +49,16 @@
         android:id="@+id/editDurationInput"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTaskNameInput" />
 
     <ImageView
-        android:id="@+id/editProfileLeftArrow"
+        android:id="@+id/editTaskLeftArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -67,33 +68,37 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/cat_spinner"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:entries="@array/categories_array"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="248dp"
-        android:entries="@array/categories_array" />
+        app:layout_constraintTop_toBottomOf="@+id/editDurationInput" />
 
     <Button
         android:id="@+id/btn_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="16dp"
         android:text="Button"
         app:layout_constraintEnd_toStartOf="@+id/btn_start_time"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="341dp" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_start_date" />
 
     <Button
         android:id="@+id/btn_start_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="84dp"
         android:text="Button"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_start_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_start_date" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_start_date" />
 
     <Button
         android:id="@+id/btn_due_date"
@@ -101,10 +106,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/saveChangesButton"
         app:layout_constraintEnd_toStartOf="@+id/btn_due_time"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_due_date" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_due_date"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/btn_due_time"
@@ -121,20 +128,22 @@
         android:id="@+id/txt_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="40dp"
         android:text="Start Date:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/cat_spinner" />
 
     <TextView
         android:id="@+id/txt_due_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="24dp"
         android:text="Due Date:"
-        app:layout_constraintTop_toBottomOf="@+id/btn_start_time"
-        tools:layout_editor_absoluteX="74dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.21"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start_date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

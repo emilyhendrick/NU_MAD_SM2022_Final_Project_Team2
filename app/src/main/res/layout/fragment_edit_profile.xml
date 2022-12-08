@@ -16,7 +16,7 @@
         android:layout_marginTop="15dp"
         android:text="@string/editProfile"
         android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/editProfileLeftArrow"
+        app:layout_constraintStart_toEndOf="@+id/editTaskLeftArrow"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
@@ -218,7 +218,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editProfileEmailInput" />
 
     <ImageView
-        android:id="@+id/editProfileLeftArrow"
+        android:id="@+id/editTaskLeftArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
