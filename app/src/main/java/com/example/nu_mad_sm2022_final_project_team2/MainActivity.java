@@ -60,7 +60,7 @@ import com.google.firebase.storage.UploadTask;
 public class MainActivity extends AppCompatActivity implements WelcomeFragment.IWelcomeFragmentAction, RegisterFragment.IRegisterFragmentAction,
         LoginFragment.ILoginFragmentAction, ProfileFragment.IProfileFragmentAction, CameraFragment.IPhotoTaken, DisplayFragment.RetakePhoto,
         EditProfileFragment.IEditProfileFragmentAction, AlarmFragment.IAlarmFragmentAction, AlarmsAdaptor.IAlarmsListRecyclerAction,
-        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, TasksFragment.ITaskFragmentAction, TasksAdaptor.ITasksListRecyclerAction, AddTaskFragment.IAddTaskFragmentAction, AddEventFragment.IAddEventFragmentAction {
+        EditAlarmFragment.IEditAlarmFragmentAction, AddAlarmFragment.IAddAlarmFragmentAction, TasksFragment.ITaskFragmentAction, TasksAdaptor.ITasksListRecyclerAction, AddTaskFragment.IAddTaskFragmentAction, AddEventFragment.IAddEventFragmentAction, EditTaskFragment.IEditTaskFragmentAction {
 
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
@@ -506,7 +506,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editTaskClicked(TaskPI task, int position) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, EditTaskFragment.newInstance(task, position), "editAlarmFragment")
+                .replace(R.id.nav_host_fragment_activity_main, EditTaskFragment.newInstance(task, position), "editTaskFragment")
                 .commit();
     }
 
@@ -538,6 +538,14 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addTaskButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AddTaskFragment.newInstance(), "addTaskFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void editTaskDone() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"TaskFragment")
                 .addToBackStack(null)
                 .commit();
     }

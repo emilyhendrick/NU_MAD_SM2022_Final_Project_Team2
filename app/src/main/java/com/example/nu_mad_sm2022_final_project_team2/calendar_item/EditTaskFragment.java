@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class EditTaskFragment extends Fragment {
         if (context instanceof EditTaskFragment.IEditTaskFragmentAction) {
             this.mListener = (EditTaskFragment.IEditTaskFragmentAction) context;
         } else {
+            Log.d("this", "actual type is: " + context.toString());
             throw new RuntimeException(context.toString());
         }
     }
@@ -93,15 +95,8 @@ public class EditTaskFragment extends Fragment {
 
         editTaskNameInput = view.findViewById(R.id.editTaskNameInput);
         editDurationInput = view.findViewById(R.id.editDurationInput);
-        editPriorityInput = view.findViewById(R.id.editPriorityInput);
-        editCategoryInput = view.findViewById(R.id.editCategoryInput);
-        taskLocationInput = view.findViewById(R.id.taskLocationInput);
-        taskBlockerInput = view.findViewById(R.id.taskBlockerInput);
-        editTextStartDate = view.findViewById(R.id.editTextStartDate);
-        editEndDate = view.findViewById(R.id.editEndDate);
         saveChangesButton = view.findViewById(R.id.saveChangesButton);
 
-        editTextStartDate.setClickable(true);
         editTextStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,20 +135,20 @@ public class EditTaskFragment extends Fragment {
         }, currentHour, currentMinute, true);
     }
 
-    private void updateAlarmInDatabase(TaskPI newTask) {
+    private void updateTaskInDatabase(TaskPI newTask) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Toast.makeText(getContext(), "Alarms updated!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Tasks updated!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to update alarms.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Failed to update tasks.", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -199,7 +194,6 @@ public class EditTaskFragment extends Fragment {
 
 
     public interface IEditTaskFragmentAction {
-        void taskBackArrowClicked();
         void editTaskDone();
     }
 }

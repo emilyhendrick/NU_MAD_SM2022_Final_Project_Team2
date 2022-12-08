@@ -139,13 +139,6 @@ public class AlarmFragment extends Fragment {
                                 if (error != null) {
                                     Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                 } else {
-                                    try {
-                                        Toast.makeText(getContext(), value.toString(), Toast.LENGTH_LONG).show();
-                                        Thread.sleep(5000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    Log.d("this", value.toString());
                                     User user = value.toObject(User.class);
                                     updateRecyclerView(user.getAlarms());
                                     mAlarms = user.getAlarms();

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
 
@@ -23,6 +25,7 @@ public abstract class ACalendarItem implements ICalendarItem{
         this.start_date = start_date;
         this.end_date = end_date;
         this.category = category;
+        this.isDone = false;
     }
 
     public ACalendarItem(String item_name, String start_date, String end_date, String category) {
@@ -35,6 +38,7 @@ public abstract class ACalendarItem implements ICalendarItem{
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        this.isDone = false;
     }
 
 
@@ -52,6 +56,21 @@ public abstract class ACalendarItem implements ICalendarItem{
 
     public void setStart_date(Date start_date) {
         this.start_date = start_date;
+    }
+
+    public Date getEnd_date() {
+        return end_date;
+    }
+
+    public String getEnd_date_asString() {
+        LocalDateTime ldt = LocalDateTime.now();
+        Date now = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+        long diff = end_date.getTime() - now.getTime();;
+        return "due in " + String.valueOf(diff) + " days";
+    }
+
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
     }
 
     public String getCategory() {

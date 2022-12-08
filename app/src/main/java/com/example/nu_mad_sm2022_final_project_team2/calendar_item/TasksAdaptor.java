@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -53,41 +54,45 @@ public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView alarmTime, alarmMessage;
-        private final Switch alarmSwitch;
-        private final ConstraintLayout alarmLayout;
+        private final TextView textTitle, dueDate, category;
+        private final CheckBox isDone;
+        private final ConstraintLayout taskLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
-            alarmTime = itemView.findViewById(R.id.taskTitle);
-            alarmMessage = itemView.findViewById(R.id.dueDate);
-            alarmSwitch = itemView.findViewById(R.id.alarmSwitch);
-            alarmLayout = itemView.findViewById(R.id.alarmLayout);
+            textTitle = itemView.findViewById(R.id.taskTitle);
+            dueDate = itemView.findViewById(R.id.dueDate);
+            category = itemView.findViewById(R.id.category);
+            isDone = itemView.findViewById(R.id.done);
+            taskLayout = itemView.findViewById(R.id.taskLayout);
         }
 
-        public TextView getAlarmTime() {
-            return alarmTime;
+        public TextView getTaskTitle() {
+            return textTitle;
         }
 
-
-        public TextView getAlarmMessage() {
-            return alarmMessage;
+        public TextView getDueDate() {
+            return dueDate;
         }
 
-        public Switch getAlarmSwitch() {
-            return alarmSwitch;
+        public TextView getTaskCategory() {
+            return category;
         }
 
-        public ConstraintLayout getAlarmLayout() {
-            return alarmLayout;
+        public CheckBox getIsDone() {
+            return isDone;
+        }
+
+        public ConstraintLayout getTaskLayout() {
+            return taskLayout;
         }
     }
 
     @NonNull
     @Override
     public TasksAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemRecyclerView = LayoutInflater
+        View taskRecyclerView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.task_row, parent, false);
 
@@ -95,16 +100,24 @@ public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-        return new TasksAdaptor.ViewHolder(itemRecyclerView);
+        return new TasksAdaptor.ViewHolder(taskRecyclerView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TasksAdaptor.ViewHolder holder, int position) {
         TaskPI task = this.tasks.get(position);
-        //holder.getAlarmTime().setText(task.toString() + " " + alarm.getAmOrPm());
-        //holder.getAlarmMessage().setText(task.getMessage());
-       // holder.getAlarmSwitch().setChecked(task.isOn());
+        holder.getTaskTitle().setText(task.getItem_name());
+        holder.getDueDate().setText(task.getEnd_date_asString());
+        holder.getTaskCategory().setText(task.getCategory());
+        holder.getIsDone().setChecked(task.isDone);
 
+        holder.getTaskLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.editTaskClicked(task, holder.getAdapterPosition());
+            }
+
+        });
     }
 
     private void updateTaskInDatabase(TaskPI newItem, int index) {
@@ -132,14 +145,14 @@ public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> 
 
     @Override
     public int getItemCount() {
-
-        if (this.tasks == null) {
-            return 0;
-        } else {
+        try {
             return this.tasks.size();
         }
-
+        catch(Exception e) {
+            return 0;
+        }
     }
+
 
     public interface ITasksListRecyclerAction {
         void editTaskClicked(TaskPI task, int position);
