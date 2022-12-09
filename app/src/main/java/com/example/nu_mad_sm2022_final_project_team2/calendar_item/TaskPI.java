@@ -109,4 +109,46 @@ public class TaskPI extends ACalendarItem implements Comparable<TaskPI> {
         return ItemType.TypeTask;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final TaskPI other = (TaskPI) obj;
+        if ((this.item_name == null) ? (other.item_name != null) : !this.item_name.equals(other.item_name)) {
+            return false;
+        }
+
+        if (this.start_date != other.start_date) {
+            return false;
+        }
+
+        if (this.start_date != other.start_date) {
+            return false;
+        }
+
+        if (this.category != other.category) {
+            return false;
+        }
+        if (this.getEnumType() != other.getEnumType()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.item_name != null ? this.item_name.hashCode() : 0);
+        hash = 53 * hash + this.duration;
+        return hash;
+    }
+
+
 }

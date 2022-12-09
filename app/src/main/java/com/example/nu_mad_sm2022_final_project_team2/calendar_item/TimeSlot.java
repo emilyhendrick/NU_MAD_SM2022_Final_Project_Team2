@@ -67,9 +67,16 @@ public class TimeSlot {
         Date slotStart = this.getStartTime();
         Date taskDue = t.getEnd_date();
         Date slotEnd = this.getEndTime();
-        // slot is free and task starts at the
-        // same time or after timeslot starts
-        return (this.isFree() && (taskStart.compareTo(slotStart) >= 0) && (taskDue.compareTo(slotEnd) < 0));
+        // task has a duration larger than 0
+        if (t.getDuration() > 0) {
+            // slot is free and task starts at the
+            // same time or after timeslot starts
+            return (this.isFree() && (taskStart.compareTo(slotStart) <= 0) && (taskDue.compareTo(slotEnd) <= 0));
+        }
+        // task has duration of 0
+        else {
+            return false;
+        }
     }
 
     @Override

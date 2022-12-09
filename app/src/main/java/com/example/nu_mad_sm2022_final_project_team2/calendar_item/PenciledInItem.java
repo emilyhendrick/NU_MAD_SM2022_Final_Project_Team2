@@ -11,7 +11,6 @@ import java.util.Date;
 public class PenciledInItem {
     String itemName;
     Date taskStartDate;
-    Date taskDueDate;
     Date scheduledStartDate;
     Date scheduledEndDate;
     String category;
@@ -19,11 +18,12 @@ public class PenciledInItem {
     Boolean scheduled;
     Boolean accepted;
     ItemType type;
+    Date task_due_date;
 
-    public PenciledInItem(String itemName, Date taskStartDate, Date taskDueDate, Date scheduledStartDate, Date scheduledEndDate, String category, Boolean done, Boolean scheduled, Boolean accepted, ItemType type) {
+
+    public PenciledInItem(String itemName, Date scheduledStartDate, Date scheduledEndDate, String category, Boolean done, Boolean scheduled, Boolean accepted, ItemType type, Date task_due_date) {
         this.itemName = itemName;
-        this.taskStartDate = taskStartDate;
-        this.taskDueDate = taskDueDate;
+        this.task_due_date = task_due_date;
         this.scheduledStartDate = scheduledStartDate;
         this.scheduledEndDate = scheduledEndDate;
         this.category = category;
@@ -37,11 +37,10 @@ public class PenciledInItem {
         if (ca.isTask()) {
             TaskPI t = (TaskPI) ca;
             this.itemName = t.item_name;
-            this.taskStartDate = t.getStart_date();
-            this.taskDueDate = t.getEnd_date();
             this.scheduledStartDate = startTime;
             this.scheduledEndDate = scheduledEndTime;
             this.done = t.getDone();
+            this.task_due_date = t.getEnd_date();
             this.type = ((TaskPI) ca).getEnumType();
             this.category = t.getCategory();
             this.scheduled = false;
@@ -52,8 +51,6 @@ public class PenciledInItem {
             this.itemName = e.item_name;
             this.scheduledStartDate = e.getStart_date();
             this.scheduledEndDate = e.getEnd_date();
-            this.taskStartDate = startTime;
-            this.taskDueDate = scheduledEndTime;
             this.category = e.getCategory();
             this.type = ItemType.TypeEvent;
             this.scheduled = true;
@@ -69,8 +66,7 @@ public class PenciledInItem {
      */
     public PenciledInItem(TaskPI t, Date schedStart, Date schedEnd ){
         this.itemName = t.item_name;
-        this.taskStartDate = t.getStart_date();
-        this.taskDueDate = t.getEnd_date();
+        this.task_due_date = t.getEnd_date();
         this.scheduledStartDate = schedStart;
         this.scheduledEndDate = schedEnd;
         this.done = t.getDone();
@@ -85,7 +81,7 @@ public class PenciledInItem {
             DateFormat mFormat = new SimpleDateFormat("MMM, d");
             Log.d("due display", this.itemName.toString());
             Log.d("due display", this.type.toString());
-            return "Due: " + mFormat.format(this.taskDueDate);
+            return "Due: " + mFormat.format(this.task_due_date);
         }
         return "";
     }
@@ -128,13 +124,6 @@ public class PenciledInItem {
         this.taskStartDate = taskStartDate;
     }
 
-    public Date getTaskDueDate() {
-        return taskDueDate;
-    }
-
-    public void setTaskDueDate(Date taskDueDate) {
-        this.taskDueDate = taskDueDate;
-    }
 
     public Date getScheduledStartDate() {
         return scheduledStartDate;
@@ -191,7 +180,17 @@ public class PenciledInItem {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public Date getTask_due_date() {
+        return task_due_date;
+    }
+
+    public void setTask_due_date(Date task_due_date) {
+        this.task_due_date = task_due_date;
+    }
 }
+
+
 
 enum ItemType {
     TypeEvent,

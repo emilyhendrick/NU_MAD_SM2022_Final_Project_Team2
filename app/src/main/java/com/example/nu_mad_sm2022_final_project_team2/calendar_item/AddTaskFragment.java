@@ -249,7 +249,7 @@ public class AddTaskFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 String selectedYear = String.valueOf(year);
-                String selectedMonth = String.valueOf(monthOfYear);
+                String selectedMonth = String.valueOf(monthOfYear + 1) ;
                 String selectedDay = String.valueOf(dayOfMonth);
                 btn.setText(selectedMonth + "/" + selectedDay + "/" + selectedYear);
             }

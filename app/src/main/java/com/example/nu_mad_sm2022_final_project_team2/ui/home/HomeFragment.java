@@ -101,7 +101,6 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-
         calendarItems = root.findViewById(R.id.calendarRecyclerView);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
         Log.d("TASKS", tasks.toString());
@@ -114,6 +113,8 @@ public class HomeFragment extends Fragment {
         DateFormat df = new SimpleDateFormat("EEE, MMM d, ''yy", Locale.US);
         String date = df.format(Calendar.getInstance().getTime());
         displayDate.setText("Your Schedule: ");
+
+
 
         loadProfile(root);
 

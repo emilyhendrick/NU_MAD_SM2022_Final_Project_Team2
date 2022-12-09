@@ -73,7 +73,7 @@ public class TasksFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             if (args.containsKey(ARG_TASKS)) {
-                mTasks = filterDoneTask((ArrayList<TaskPI>) args.getSerializable(ARG_TASKS));
+                mTasks = TaskUtils.filterDoneTask((ArrayList<TaskPI>) args.getSerializable(ARG_TASKS));
             }
 
             db = FirebaseFirestore.getInstance();
@@ -123,8 +123,8 @@ public class TasksFragment extends Fragment {
         return view;
     }
     public void updateRecyclerView(ArrayList<TaskPI> tasks) {
-        this.mTasks = filterDoneTask(tasks);
-        tasksAdaptor.setTasks(filterDoneTask(tasks));
+        this.mTasks = TaskUtils.filterDoneTask(tasks);
+        tasksAdaptor.setTasks(TaskUtils.filterDoneTask(tasks));
         tasksAdaptor.notifyDataSetChanged();
     }
 
@@ -138,7 +138,7 @@ public class TasksFragment extends Fragment {
                         if(task.isSuccessful()){
                             User user = task.getResult().toObject(User.class);
                             updateRecyclerView(user.getTasks());
-                            mTasks = filterDoneTask(user.getTasks());
+                            mTasks = TaskUtils.filterDoneTask(user.getTasks());
                             mUser.reload();
                         }
                     }
@@ -150,18 +150,4 @@ public class TasksFragment extends Fragment {
         void addTaskClicked();
     }
 
-    /**
-     * Remove done tasks from list of tasks
-     */
-    public ArrayList<TaskPI> filterDoneTask(ArrayList<TaskPI>  tasks) {
-        ArrayList<TaskPI> noDones = new ArrayList<TaskPI>();
-        if (tasks != null) {
-            for( TaskPI t : tasks) {
-                if (!(t.isDone)) {
-                    noDones.add(t);
-                }
-            }
-        }
-        return noDones;
-    }
 }

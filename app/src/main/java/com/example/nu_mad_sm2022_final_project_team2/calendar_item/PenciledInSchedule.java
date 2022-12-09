@@ -21,16 +21,19 @@ import java.util.concurrent.TimeUnit;
 public class PenciledInSchedule {
     ArrayList<PenciledInItem> items;
     ArrayList<TaskPI> availableTasks;
+    ArrayList<TaskPI> tasksInProgress;
     ArrayList<Event> availableEvents;
     ArrayList<TimeSlot> availableSlots;
     Date startConstraint;
     Date endConstraint;
-    int INTERVAL = 15;
+    int INTERVAL = 5;
+    // in 24 hours time;
     int STARTHOUR = 9;
     int ENDHOUR = 17;
 
     public PenciledInSchedule(ArrayList<PenciledInItem> items, ArrayList<TaskPI> availableTasks, ArrayList<Event> availableEvents, ArrayList<TimeSlot> availableSlots, Date startConstraint, Date endConstraint) {
         this.items = items;
+        this.tasksInProgress = availableTasks;
         this.availableTasks = availableTasks;
         this.availableEvents = availableEvents;
         this.availableSlots = availableSlots;
@@ -40,12 +43,14 @@ public class PenciledInSchedule {
 
     public PenciledInSchedule(User u) {
         this.availableTasks = u.getTasks();
+        this.tasksInProgress = u.getTasks();
         this.availableEvents = u.getEvents();
         validateAndCreate();
     }
 
     public PenciledInSchedule( ArrayList<TaskPI> availableTasks, ArrayList<Event> availableEvents) {
         this.availableTasks = availableTasks;
+        this.tasksInProgress = availableTasks;
         this.availableEvents = availableEvents;
         validateAndCreate();
     }
@@ -64,6 +69,7 @@ public class PenciledInSchedule {
 
     public void setAvailableTasks(ArrayList<TaskPI> availableTasks) {
         this.availableTasks = availableTasks;
+        this.tasksInProgress = availableTasks;
     }
 
     public ArrayList<Event> getAvailableEvents() {
@@ -104,43 +110,12 @@ public class PenciledInSchedule {
         return atasks;
     }
 
-    public Date getLastDeadline() {
-        ArrayList<TaskPI> ts = this.availableTasks;
-        Collections.sort(ts, new Comparator<TaskPI>(){
-            public int compare(TaskPI o1, TaskPI o2){
-                Date d1 = o1.getEnd_date();
-                Date d2 = o2.getEnd_date();
-                return (d1.compareTo(d2));
-            }
-        });
-        return ts.get(ts.size()-1).getEnd_date();
-    }
-
-    public Date getFirstStartDate() {
-        ArrayList<TaskPI> ts = this.availableTasks;
-        if (ts.size() > 0) {
-            Collections.sort(ts, new Comparator<TaskPI>(){
-                public int compare(TaskPI o1, TaskPI o2){
-                    Date d1 = o1.getStart_date();
-                    Date d2 = o2.getStart_date();
-                    return (d1.compareTo(d2));
-                }
-            });
-            return ts.get(0).getStart_date();
-        }
-        else {
-            LocalDateTime ldt = LocalDateTime.now();
-            return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        }
-
-
-    }
 
 
     public ArrayList<TimeSlot> createEmptySlots() {
-        ArrayList<TimeSlot> slots = new ArrayList<>();
-        Date s = this.getFirstStartDate();
-        Date e = this.getLastDeadline();
+        ArrayList<TimeSlot> slotsEmpty = new ArrayList<>();
+        Date s = TaskUtils.getFirstStartDate(this.availableTasks, this.availableEvents);
+        Date e = TaskUtils.getLastDeadline(this.availableTasks);
 
         long diff = e.getTime() - s.getTime();
         long mins = TimeUnit.MILLISECONDS.toMinutes(diff);
@@ -156,14 +131,17 @@ public class PenciledInSchedule {
             // if within working hours add to slots
             if (STARTHOUR <= hourInDay & hourInDay <= ENDHOUR) {
                 TimeSlot ts = new TimeSlot(s, endTime);
-                slots.add(ts);
+                slotsEmpty.add(ts);
                 s = addDurationtoDate(endTime, 1);
             }
             else {
                 s = this.addDurationtoDate(endTime, 1);
             }
         }
-        return slots;
+        Log.d("miaSTARTDATE", s.toString());
+        Log.d("miaENDDATE", e.toString());
+        Log.d("slotsemptynoevents", slotsEmpty.toString());
+        return slotsEmpty;
     }
 
     public ArrayList<TimeSlot> addEventsToSlots(ArrayList<TimeSlot> emSlots) {
@@ -176,35 +154,77 @@ public class PenciledInSchedule {
             }
         }
         }
+        Log.d("slotwithevents", emSlots.toString());
         return emSlots;
     }
 
-    public ArrayList<TimeSlot> createWorstCaseSchedule() {
-        ArrayList<TimeSlot> slots = this.createEmptySlots();
-        this.addEventsToSlots(slots);
-        //reverse list
-        Collections.reverse(slots);
-        ArrayList<TaskPI>  sortedT = sortTasksByPayoff(this.availableTasks);
-
-        // iterate through all tasks
-        for (TaskPI tsk : sortedT) {
-            // find free slot for task starting from last possible slot
-            for (TimeSlot ts : slots){
-                if (ts.isSlotAvailableForTask(tsk)) {
-                    ts.setItem(tsk);
-                }
-            }
+    /**
+     * Schedules all high priority items right before their deadline and then
+     * fills in lower priority items.
+     * @return TimeSlots with tasks scheduled right before they are due
+     */
+    public ArrayList<TimeSlot> createWorstCaseSchedule(ArrayList<TimeSlot> slots) {
+        if (this.tasksInProgress.size() == 0 ) {
+            return slots;
         }
-        // reverse back
-        Collections.reverse(slots);
-        Log.d("WORST", slots.toString());
+        for (TaskPI t : tasksInProgress) {
+            placeTaskInSlots(t, slots);
+        }
+        Log.d("worst -tasks ", this.tasksInProgress.toString());
+        Log.d("worst", slots.toString());
         return slots;
     }
 
+    public void placeTaskInSlots(TaskPI task, ArrayList<TimeSlot> slots) {
+        for (TimeSlot ts : slots) {
+            if (ts.isSlotAvailableForTask(task))  {
+                ts.setItem(task);
+                TaskUtils.removeIfZero(this.tasksInProgress, task);
+                updateTaskDurationbySlot(task, ts);
+            }
+        }
+    }
+
+    public ArrayList<TimeSlot> initializeTimeSlots() {
+        ArrayList<TimeSlot> slotsEmptyEvents = this.createEmptySlots();
+        slotsEmptyEvents = addEventsToSlots(slotsEmptyEvents);
+
+        Collections.reverse(slotsEmptyEvents);
+        Log.d("slotsemptynoevents", slotsEmptyEvents.toString());
+        return slotsEmptyEvents;
+    }
+
+    /**
+     * Removes slot time from the task duration and updates start and end time
+     * @param task task to be scheduled into slot
+     * @param ts slot
+     * @return task representing remaining task after slot is filled
+     */
+    public void updateTaskDurationbySlot(TaskPI task, TimeSlot ts) {
+        Date slotStart = ts.getStartTime();
+        Date slotEnd = ts.getEndTime();
+        // slotDuration unit in milliseconds
+        long slotDuration = Math.abs(slotEnd.getTime() - slotStart.getTime());
+        // task Duration unit in milliseconds
+        int taskDuration = task.getDuration() * 60000;
+        long newDuration = taskDuration - slotDuration;
+        // if duration is negative round to 0
+        if (newDuration < 0) {
+            newDuration = 0;
+        }
+        // convert milliseconds back to minutes
+        newDuration = newDuration/60000;
+        // use new duration to update the task
+        task.setDuration((int) newDuration);
+    }
 
 
+    /**
+     * If there is free time before tasks are due move tasks up so
+     * they are not done at the last minute.
+     */
     public void createSchedule() {
-        ArrayList<TimeSlot> slots = createWorstCaseSchedule();
+        ArrayList<TimeSlot> slots = createWorstCaseSchedule(initializeTimeSlots());
         int n = slots.size();
         int firstEmpty = 0;
         Boolean isEmptySet = false;
@@ -324,9 +344,15 @@ public class PenciledInSchedule {
     }
 
 
+    /**
+     * Combine to PenciledInItems into one with correct start and end time.
+     * @param prev previous event/task
+     * @param curr current event/task
+     * @return event/task of both combined
+     */
     public PenciledInItem combine(PenciledInItem prev, PenciledInItem curr) {
         return new PenciledInItem(prev.itemName, prev.taskStartDate,
-                curr.taskDueDate, prev.taskStartDate, curr.taskDueDate, prev.category, false, true, false, prev.type);
+                curr., prev.taskStartDate, curr.taskDueDate, prev.category, false, true, false, prev.type, newTask);
     }
 
     /**
@@ -334,13 +360,16 @@ public class PenciledInSchedule {
      */
     public void createPIItemsEventsOnly() {
         ArrayList<PenciledInItem> schedule = new ArrayList<>();
-        int n = availableEvents.size();
-        for (int i = 0; i < n; i++) {
+        if (this.availableEvents != null) {
+            ArrayList<Event> currEvents = TaskUtils.filterForCurrentEvents(this.availableEvents);
+            int n = currEvents.size();
+            for (int i = 0; i < n; i++) {
                 PenciledInItem it = new PenciledInItem(availableEvents.get(i));
                 schedule.add(it);
             }
-         this.items = schedule;
+            this.items = schedule;
         }
-
     }
+
+}
 

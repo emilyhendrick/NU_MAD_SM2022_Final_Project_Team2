@@ -12,6 +12,8 @@ import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInItem;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInSchedule;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskUtils;
+import com.google.android.gms.common.api.internal.TaskUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,7 +29,7 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     public CalendarViewAdapter(PenciledInSchedule schedule) {
         this.schedule = schedule;
-        this.items = schedule.getItems();
+        this.items = TaskUtils.sortItemsByStartDate(schedule.getItems());
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder{

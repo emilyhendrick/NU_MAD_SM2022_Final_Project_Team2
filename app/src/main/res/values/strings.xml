@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NU_MAD_SM2022_Final_Project_Team2</string>
+    <string name="app_name">PenciledIn</string>
 
     // log in flow
     <string name="welcome">Welcome to PenciledIn!</string>
