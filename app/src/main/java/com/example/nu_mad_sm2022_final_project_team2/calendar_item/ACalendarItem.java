@@ -71,10 +71,10 @@ public abstract class ACalendarItem implements ICalendarItem{
         Date now = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
         long diff = end_date.getTime() - now.getTime();
         long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd hh:mm a");
         String strDate = dateFormat.format(end_date);
         String today = dateFormat.format(now);
-        return "Due: " + strDate;
+        return "Complete by: " + strDate;
     }
 
     public void setEnd_date(Date end_date) {
@@ -109,5 +109,8 @@ public abstract class ACalendarItem implements ICalendarItem{
     }
 
     abstract Boolean isTask();
+
+    abstract ItemType getEnumType();
+
 
 }

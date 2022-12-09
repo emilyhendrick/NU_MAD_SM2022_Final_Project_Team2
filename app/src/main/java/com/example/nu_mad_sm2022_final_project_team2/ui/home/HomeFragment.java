@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment {
         displayDate = root.findViewById(R.id.currentDate);
         DateFormat df = new SimpleDateFormat("EEE, MMM d, ''yy", Locale.US);
         String date = df.format(Calendar.getInstance().getTime());
-        displayDate.setText(date);
+        displayDate.setText("Your Schedule: ");
 
         loadProfile(root);
 

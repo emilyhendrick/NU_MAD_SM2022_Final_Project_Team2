@@ -104,4 +104,9 @@ public class TaskPI extends ACalendarItem implements Comparable<TaskPI> {
         return this.getItem_name() + "starts: " + start + " ends: " + end;
     }
 
+    @Override
+    ItemType getEnumType() {
+        return ItemType.TypeTask;
+    }
+
 }

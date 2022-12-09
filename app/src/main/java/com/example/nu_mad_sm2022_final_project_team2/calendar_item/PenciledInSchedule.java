@@ -163,7 +163,6 @@ public class PenciledInSchedule {
                 s = this.addDurationtoDate(endTime, 1);
             }
         }
-        Log.d("emptyslots", slots.toString());
         return slots;
     }
 
@@ -177,8 +176,6 @@ public class PenciledInSchedule {
             }
         }
         }
-        Log.d("events available", this.availableEvents.toString());
-        Log.d("events added", emSlots.toString());
         return emSlots;
     }
 
@@ -285,7 +282,7 @@ public class PenciledInSchedule {
     /**
      * Based on the scheduled available slots created corresponding PenciledInItems
      */
-    public void createPIItems() {
+    public ArrayList<PenciledInItem>  createPIItemsSimple() {
         ArrayList<TimeSlot> slots = this.availableSlots;
         ArrayList<PenciledInItem> schedule = new ArrayList<>();
         int n = slots.size();
@@ -297,8 +294,39 @@ public class PenciledInSchedule {
                schedule.add(it);
             }
         }
-        this.items = schedule;
-        Log.d("ITEMSCREATED", this.items.toString());
+        return schedule;
+    }
+
+
+    /**
+     * Collapse slots that are the same into one Item
+     */
+    public void createPIItems () {
+        ArrayList<PenciledInItem> oldSchedule = createPIItemsSimple();
+        ArrayList<PenciledInItem> collapsedScheduled = new ArrayList<>();
+        int n = oldSchedule.size();
+        int i = 1;
+        while (i < n) {
+            PenciledInItem prev = oldSchedule.get(i - 1);
+            PenciledInItem curr = oldSchedule.get(i);
+            if (prev.isSameTask(curr)) {
+                PenciledInItem newCombo = combine(prev, curr);
+                oldSchedule.set(i, newCombo);
+                oldSchedule.remove(prev);
+                n--;
+            }
+            else {
+                collapsedScheduled.add(curr);
+                i++;
+            }
+        }
+        this.items = oldSchedule;
+    }
+
+
+    public PenciledInItem combine(PenciledInItem prev, PenciledInItem curr) {
+        return new PenciledInItem(prev.itemName, prev.taskStartDate,
+                curr.taskDueDate, prev.taskStartDate, curr.taskDueDate, prev.category, false, true, false, prev.type);
     }
 
     /**

@@ -1,5 +1,9 @@
 package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
+import android.util.Log;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -29,16 +33,16 @@ public class PenciledInItem {
         this.type = type;
     }
 
-    public PenciledInItem(ACalendarItem ca, Date starttime, Date endtime) {
+    public PenciledInItem(ACalendarItem ca, Date startTime, Date scheduledEndTime) {
         if (ca.isTask()) {
             TaskPI t = (TaskPI) ca;
             this.itemName = t.item_name;
             this.taskStartDate = t.getStart_date();
             this.taskDueDate = t.getEnd_date();
-            this.scheduledStartDate = starttime;
-            this.scheduledEndDate = endtime;
+            this.scheduledStartDate = startTime;
+            this.scheduledEndDate = scheduledEndTime;
             this.done = t.getDone();
-            this.type = ItemType.TypeTask;
+            this.type = ((TaskPI) ca).getEnumType();
             this.category = t.getCategory();
             this.scheduled = false;
             this.accepted = false;
@@ -48,6 +52,8 @@ public class PenciledInItem {
             this.itemName = e.item_name;
             this.scheduledStartDate = e.getStart_date();
             this.scheduledEndDate = e.getEnd_date();
+            this.taskStartDate = startTime;
+            this.taskDueDate = scheduledEndTime;
             this.category = e.getCategory();
             this.type = ItemType.TypeEvent;
             this.scheduled = true;
@@ -61,20 +67,39 @@ public class PenciledInItem {
      * ScheduledEndDate until they are schedueld by scheduling alg.
      * @param t TaskPI
      */
-    public PenciledInItem(TaskPI t ){
+    public PenciledInItem(TaskPI t, Date schedStart, Date schedEnd ){
         this.itemName = t.item_name;
         this.taskStartDate = t.getStart_date();
         this.taskDueDate = t.getEnd_date();
+        this.scheduledStartDate = schedStart;
+        this.scheduledEndDate = schedEnd;
         this.done = t.getDone();
-        this.type = ItemType.TypeTask;
+        this.type = t.getEnumType();
         this.category = t.getCategory();
         this.scheduled = false;
         this.accepted = false;
     }
 
+    public String getDueDisplay() {
+        if (this.type == ItemType.TypeTask) {
+            DateFormat mFormat = new SimpleDateFormat("MMM, d");
+            Log.d("due display", this.itemName.toString());
+            Log.d("due display", this.type.toString());
+            return "Due: " + mFormat.format(this.taskDueDate);
+        }
+        return "";
+    }
+
+
+
+
+    public Boolean isSameTask(PenciledInItem other) {
+        return (this.itemName == other.itemName & this.category == other.category);
+    }
+
     /**
      * Turns a Event into a PenciledInItem. These items of
-     * TypeEvent alreaady have a ScheduledStartDate and
+     * TypeEvent already have a ScheduledStartDate and
      * ScheduledEndDate and cannot be rescheduled by the alg- bc they are already set appointments.
      * @param e Event
      */
@@ -83,7 +108,7 @@ public class PenciledInItem {
         this.scheduledStartDate = e.getStart_date();
         this.scheduledEndDate = e.getEnd_date();
         this.category = e.getCategory();
-        this.type = ItemType.TypeEvent;
+        this.type = e.getEnumType();
         this.scheduled = true;
     }
 

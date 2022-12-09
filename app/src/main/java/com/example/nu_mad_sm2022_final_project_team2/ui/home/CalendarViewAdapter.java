@@ -22,6 +22,7 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     private PenciledInSchedule schedule;
     private ArrayList<PenciledInItem> items;
+    TextView txt_start_time, txt_end_time, task_name, txt_category, txt_due, txt_date;
 
 
     public CalendarViewAdapter(PenciledInSchedule schedule) {
@@ -31,21 +32,31 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder{
 
-        private final TextView calendarEventTime;
-        private final TextView calendarEventName;
+        private final TextView txt_start_time, txt_end_time, task_name, txt_category, txt_date, txt_due;
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.calendarEventTime = itemView.findViewById(R.id.calendarEventTime);
-            this.calendarEventName = itemView.findViewById(R.id.calendarEventName);
+            this.txt_start_time = itemView.findViewById(R.id.txt_start_time);
+            this.txt_end_time = itemView.findViewById(R.id.txt_end_time);
+            this.task_name = itemView.findViewById(R.id.task_name);
+            this.txt_category =  itemView.findViewById(R.id.txt_category);
+            this.txt_date = itemView.findViewById(R.id.txt_date);
+            this.txt_due = itemView.findViewById(R.id.txt_due);
         }
 
-        public TextView getTextViewName() {
-            return calendarEventTime;
+        public TextView getTextViewStartTime() {
+            return txt_start_time;
         }
-
-        public TextView getTextViewMessage() {
-            return calendarEventName;
+        public TextView getTextViewEndTime() {
+            return txt_end_time;
         }
+        public TextView getTextViewTaskName() {
+            return task_name;
+        }
+        public TextView getTextViewCategory() {
+            return txt_category;
+        }
+        public TextView getTextViewDate() { return txt_date; }
+        public TextView getTextDueDate() { return txt_due; }
 
     }
 
@@ -63,10 +74,14 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         PenciledInItem curTask = this.items.get(position);
 
-        holder.calendarEventName.setText(curTask.getItemName());
-        DateFormat dateFormat = new SimpleDateFormat("M, d hh:mm a");
-        String startDate = dateFormat.format(curTask.getScheduledStartDate());
-        holder.calendarEventTime.setText(startDate);
+        holder.task_name.setText(curTask.getItemName());
+        holder.txt_category.setText(curTask.getCategory());
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        DateFormat mFormat = new SimpleDateFormat("MMM, d");
+        holder.txt_start_time.setText(dateFormat.format(curTask.getScheduledStartDate()));
+        holder.txt_end_time.setText(dateFormat.format(curTask.getScheduledEndDate()));
+        holder.txt_date.setText(mFormat.format(curTask.getScheduledStartDate()));
+        holder.txt_due.setText(curTask.getDueDisplay());
     }
 
     @Override

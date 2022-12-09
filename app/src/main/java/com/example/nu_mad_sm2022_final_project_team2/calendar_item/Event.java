@@ -65,4 +65,9 @@ public class Event extends ACalendarItem {
         String end = dateFormat.format(this.end_date);
         return this.getItem_name() + "starts: " + start + " ends: " + end;
     }
+
+    @Override
+    ItemType getEnumType() {
+        return ItemType.TypeEvent;
+    }
 }
