@@ -115,9 +115,14 @@ public class PenciledInSchedule {
 
 
     public ArrayList<TimeSlot> createEmptySlots() {
+        Date today = new Date();
+        Date weekFromToday = TaskUtils.addDaysToDate(today, 7);
+        Date endDate  = weekFromToday;
         ArrayList<TimeSlot> slotsEmpty = new ArrayList<>();
         Date s = TaskUtils.getFirstStartDate(this.availableTasks, this.availableEvents);
-        Date e = TaskUtils.getLastDeadline(this.availableTasks);
+        Date e = weekFromToday;
+        Log.d("miaSTARTDATE", s.toString());
+        Log.d("miaENDDATE", e.toString());
 
         long diff = e.getTime() - s.getTime();
         long mins = TimeUnit.MILLISECONDS.toMinutes(diff);
@@ -140,8 +145,6 @@ public class PenciledInSchedule {
                 s = this.addDurationtoDate(endTime, 1);
             }
         }
-        Log.d("miaSTARTDATE", s.toString());
-        Log.d("miaENDDATE", e.toString());
         Log.d("slotsemptynoevents", slotsEmpty.toString());
         return slotsEmpty;
     }
@@ -275,13 +278,11 @@ public class PenciledInSchedule {
     }
 
     public void validateAndCreate() {
-        if (this.availableTasks != null & this.availableEvents != null) {
-            if (this.availableTasks.size() > 0) {
+        if (this.availableTasks != null && this.availableEvents != null && this.availableTasks.size() > 0) {
                 createSchedule();
-            }
-            else {
-                createPIItemsEventsOnly();
-            }
+        }
+        else {
+            createPIItemsEventsOnly();
         }
     }
 

@@ -83,14 +83,15 @@ public final class TaskUtils {
      * Finds latest end date that is at most 1 week away. If there is none return date of week from today.
      * @return Date - latest or week from today
      */
-    public static Date getLastDeadline(ArrayList<TaskPI> tasks) {
+    public static Date getLastDeadline(ArrayList<TaskPI> tasks, ArrayList<Event> events) {
         ArrayList<TaskPI> ts = sortByStartDate(tasks);
-        // sort by latest date
-        Collections.reverse(ts);
+        ArrayList<Event> event = sortByStartDateEvents(events);
+        TaskPI lastTask = ts.get(tasks.size());
+        Event lastEvent = events.get(events.size());
+
         Date today = new Date();
         Date weekFromToday = addDaysToDate(today, 7);
         Date endDate  = weekFromToday;
-        // sort by start date
         for (TaskPI t : ts) {
             if (t.getEnd_date().compareTo(weekFromToday) <= 0) {
                 endDate = t.getEnd_date();
@@ -179,16 +180,19 @@ public final class TaskUtils {
     }
 
     public static ArrayList<PenciledInItem> sortItemsByStartDate(ArrayList<PenciledInItem> pi) {
-        ArrayList<PenciledInItem> slots = pi;
-        // sort from earliest to latest
-        Collections.sort(slots, new Comparator<PenciledInItem>(){
-            public int compare(PenciledInItem o1, PenciledInItem o2){
-                Date d1 = o1.getScheduledStartDate();
-                Date d2 = o2.getScheduledStartDate();
-                return (d1.compareTo(d2));
-            }
-        });
-        return slots;
+        if (pi != null) {
+            ArrayList<PenciledInItem> slots = pi;
+            // sort from earliest to latest
+            Collections.sort(slots, new Comparator<PenciledInItem>() {
+                public int compare(PenciledInItem o1, PenciledInItem o2) {
+                    Date d1 = o1.getScheduledStartDate();
+                    Date d2 = o2.getScheduledStartDate();
+                    return (d1.compareTo(d2));
+                }
+            });
+            return slots;
+        }
+        return new ArrayList<PenciledInItem>();
     }
 
     public static void removeIfZero(ArrayList<TaskPI> lot, TaskPI task) {
