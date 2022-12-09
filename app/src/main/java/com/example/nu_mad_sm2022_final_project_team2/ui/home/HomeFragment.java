@@ -3,6 +3,7 @@ package com.example.nu_mad_sm2022_final_project_team2.ui.home;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,14 @@ import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.User;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.Event;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInSchedule;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 import com.example.nu_mad_sm2022_final_project_team2.databinding.FragmentHomeBinding;
 import com.example.nu_mad_sm2022_final_project_team2.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,8 +40,12 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
+    private static final String ARG_TASKS = "tasksarray";
+    private static final String ARG_EVENTS = "eventsarray";
     private static ArrayList<TaskPI> tasks;
     private static ArrayList<Event> events;
+    private static ArrayList<TaskPI> taskstest;
+    private static ArrayList<Event> eventstest;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore db;
@@ -67,9 +75,20 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
+            db = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            mUser = mAuth.getCurrentUser();
+            Bundle args = getArguments();
+            if (args != null) {
+                if (args.containsKey(ARG_TASKS)) {
+                    taskstest = (ArrayList<TaskPI>) args.getSerializable(ARG_TASKS);
+                }
+                if (args.containsKey(ARG_EVENTS)) {
+                    eventstest = (ArrayList<Event>) args.getSerializable(ARG_EVENTS);
+                }
+
+        }
+
     }
 
     @Override
@@ -85,10 +104,10 @@ public class HomeFragment extends Fragment {
 
         calendarItems = root.findViewById(R.id.calendarRecyclerView);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        taskAdapter = new CalendarViewAdapter(tasks);
+        PenciledInSchedule sched = new PenciledInSchedule(tasks, events);
+        taskAdapter = new CalendarViewAdapter(sched);
         calendarItems.setLayoutManager(recyclerViewLayoutManager);
         calendarItems.setAdapter(taskAdapter);
-
         displayDate = root.findViewById(R.id.currentDate);
         DateFormat df = new SimpleDateFormat("EEE, MMM d, ''yy", Locale.US);
         String date = df.format(Calendar.getInstance().getTime());
@@ -113,11 +132,23 @@ public class HomeFragment extends Fragment {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
                         ArrayList<TaskPI> t = user.getTasks();
-                        taskAdapter = new CalendarViewAdapter(user.getTasks());
+                        ArrayList<Event> e = user.getEvents();
+                        PenciledInSchedule sched = new PenciledInSchedule(t, e);
+                        sched.getItems();
+                        //String log = "Items" + sched.getItems().toString();
+                        //Log.d("ITEMS", log);
+                        Log.d("Events", user.getEvents().toString());
+                        Log.d("Tasks", user.getTasks().toString());
+                        Toast.makeText(getContext(), user.getEvents().toString(), Toast.LENGTH_SHORT).show();
+                        taskAdapter = new CalendarViewAdapter(sched);
                         calendarItems.setLayoutManager(recyclerViewLayoutManager);
                         calendarItems.setAdapter(taskAdapter);
                     }
                 });
     }
+
+
+
+
 
 }

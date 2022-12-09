@@ -61,7 +61,7 @@ public class TasksFragment extends Fragment {
     public static TasksFragment newInstance() {
         TasksFragment fragment = new TasksFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TASKS, new ArrayList<ACalendarItem>());
+        args.putSerializable(ARG_TASKS, new ArrayList<TaskPI>());
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,7 +73,7 @@ public class TasksFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             if (args.containsKey(ARG_TASKS)) {
-                mTasks = (ArrayList<TaskPI>) args.getSerializable(ARG_TASKS);
+                mTasks = filterDoneTask((ArrayList<TaskPI>) args.getSerializable(ARG_TASKS));
             }
 
             db = FirebaseFirestore.getInstance();
@@ -82,7 +82,7 @@ public class TasksFragment extends Fragment {
 
             loadData();
         }
-        getActivity().setTitle("Alarms");
+        getActivity().setTitle("Tasks");
     }
 
     @Override
@@ -123,8 +123,8 @@ public class TasksFragment extends Fragment {
         return view;
     }
     public void updateRecyclerView(ArrayList<TaskPI> tasks) {
-        this.mTasks = tasks;
-        tasksAdaptor.setTasks(tasks);
+        this.mTasks = filterDoneTask(tasks);
+        tasksAdaptor.setTasks(filterDoneTask(tasks));
         tasksAdaptor.notifyDataSetChanged();
     }
 
@@ -138,7 +138,7 @@ public class TasksFragment extends Fragment {
                         if(task.isSuccessful()){
                             User user = task.getResult().toObject(User.class);
                             updateRecyclerView(user.getTasks());
-                            mTasks = user.getTasks();
+                            mTasks = filterDoneTask(user.getTasks());
                             mUser.reload();
                         }
                     }
@@ -148,5 +148,20 @@ public class TasksFragment extends Fragment {
     public interface ITaskFragmentAction {
         void taskBackArrowClicked();
         void addTaskClicked();
+    }
+
+    /**
+     * Remove done tasks from list of tasks
+     */
+    public ArrayList<TaskPI> filterDoneTask(ArrayList<TaskPI>  tasks) {
+        ArrayList<TaskPI> noDones = new ArrayList<TaskPI>();
+        if (tasks != null) {
+            for( TaskPI t : tasks) {
+                if (!(t.isDone)) {
+                    noDones.add(t);
+                }
+            }
+        }
+        return noDones;
     }
 }

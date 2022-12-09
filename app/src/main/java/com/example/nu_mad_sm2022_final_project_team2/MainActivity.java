@@ -505,8 +505,20 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void editTaskClicked(TaskPI task, int position) {
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, EditTaskFragment.newInstance(task, position), "editTaskFragment")
+                .commit();
     }
+
+    @Override
+    public void taskChecked(TaskPI task) {
+        task.check();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(), "TasksFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
 
     @Override
     public void addTaskBackArrowClicked() {

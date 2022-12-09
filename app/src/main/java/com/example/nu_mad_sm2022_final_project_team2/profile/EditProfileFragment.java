@@ -142,6 +142,8 @@ public class EditProfileFragment extends Fragment {
                         User user = documentSnapshot.toObject(User.class);
 
                         alarms = user.getAlarms();
+                        tasks = user.getTasks();
+                        events = user.getEvents();
 
                         firstNameInput.setText(user.getFirstName());
                         lastNameInput.setText(user.getLastName());

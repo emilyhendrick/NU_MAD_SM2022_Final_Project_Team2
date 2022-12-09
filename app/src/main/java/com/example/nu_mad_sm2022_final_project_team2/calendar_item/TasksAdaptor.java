@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -87,6 +88,7 @@ public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> 
         public ConstraintLayout getTaskLayout() {
             return taskLayout;
         }
+
     }
 
     @NonNull
@@ -117,6 +119,21 @@ public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> 
                 mListener.editTaskClicked(task, holder.getAdapterPosition());
             }
 
+        });
+        holder.getTaskLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.editTaskClicked(task, holder.getAdapterPosition());
+            }
+        });
+
+        holder.getIsDone().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                task.check();
+                updateTaskInDatabase(task, holder.getAdapterPosition());
+                mListener.taskChecked(task);
+            }
         });
     }
 
@@ -156,6 +173,7 @@ public class TasksAdaptor extends RecyclerView.Adapter<TasksAdaptor.ViewHolder> 
 
     public interface ITasksListRecyclerAction {
         void editTaskClicked(TaskPI task, int position);
+        void taskChecked(TaskPI task);
     }
 }
 

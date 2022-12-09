@@ -84,4 +84,14 @@ public class TaskPI extends ACalendarItem implements Comparable<TaskPI> {
     Boolean isTask() {
         return true;
     }
+
+    public void check() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+
+        }
+        this.isDone = true;
+    }
+
 }

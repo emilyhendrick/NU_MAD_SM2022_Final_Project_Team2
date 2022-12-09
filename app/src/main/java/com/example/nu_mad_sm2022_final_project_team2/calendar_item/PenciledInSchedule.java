@@ -27,17 +27,18 @@ public class PenciledInSchedule {
         this.availableTasks = availableTasks;
         this.availableEvents = availableEvents;
         this.availableSlots = availableSlots;
-        this.startConstraint = startConstraint;
-        this.endConstraint = endConstraint;
         validateAndCreate();
     }
 
-    public PenciledInSchedule(User u, Date startConstraint, Date endConstraint, ArrayList<TimeSlot> availableSlots) {
+    public PenciledInSchedule(User u) {
         this.availableTasks = u.getTasks();
         this.availableEvents = u.getEvents();
-        this.availableSlots = availableSlots;
-        this.startConstraint = startConstraint;
-        this.endConstraint = endConstraint;
+        validateAndCreate();
+    }
+
+    public PenciledInSchedule( ArrayList<TaskPI> availableTasks, ArrayList<Event> availableEvents) {
+        this.availableTasks = availableTasks;
+        this.availableEvents = availableEvents;
         validateAndCreate();
     }
 

@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInSchedule;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 
 import java.util.ArrayList;
@@ -16,17 +18,19 @@ import java.util.ArrayList;
 
 public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapter.TaskViewHolder> {
 
-    private ArrayList<TaskPI> tasks;
+    private PenciledInSchedule schedule;
+    private ArrayList<PenciledInItem> items;
 
-    public CalendarViewAdapter(ArrayList<TaskPI> tasks) {
-        this.tasks = tasks;
+
+    public CalendarViewAdapter(PenciledInSchedule schedule) {
+        this.schedule = schedule;
+        this.items = schedule.getItems();
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder{
 
         private final TextView calendarEventTime;
         private final TextView calendarEventName;
-
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             this.calendarEventTime = itemView.findViewById(R.id.calendarEventTime);
@@ -55,19 +59,19 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        ACalendarItem curTask = this.tasks.get(position);
+        PenciledInItem curTask = this.items.get(position);
 
-        holder.calendarEventName.setText(curTask.getItem_name());
-        holder.calendarEventTime.setText(curTask.getItem_name());
+        holder.calendarEventName.setText(curTask.getItemName());
+        holder.calendarEventTime.setText(curTask.getItemName());
     }
 
     @Override
     public int getItemCount() {
-        if (tasks == null) {
+        if (items == null) {
             return 0;
         }
         else {
-            return this.tasks.size();
+            return this.items.size();
         }
     }
 }
