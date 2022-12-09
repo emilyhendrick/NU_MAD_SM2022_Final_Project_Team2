@@ -71,7 +71,7 @@ public class TimeSlot {
         if (t.getDuration() > 0) {
             // slot is free and task starts at the
             // same time or after timeslot starts
-            return (this.isFree() && (taskStart.compareTo(slotStart) <= 0) && (taskDue.compareTo(slotEnd) <= 0));
+            return (this.isFree() & (taskStart.compareTo(slotStart) <= 0) & (taskDue.compareTo(slotEnd) >= 0));
         }
         // task has duration of 0
         else {

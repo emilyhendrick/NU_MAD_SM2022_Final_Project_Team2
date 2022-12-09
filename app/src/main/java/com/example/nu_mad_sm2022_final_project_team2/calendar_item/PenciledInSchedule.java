@@ -4,8 +4,10 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.databinding.TaskListItemsBinding;
 import com.google.api.LogDescriptor;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -227,36 +229,26 @@ public class PenciledInSchedule {
     public void createSchedule() {
         ArrayList<TimeSlot> slots = createWorstCaseSchedule(initializeTimeSlots());
         int n = slots.size();
-        int firstEmpty = 0;
-        Boolean isEmptySet = false;
-        int i = 0;
-        while (i < n) {
-            if (slots.get(i).isFree()){
-                if (firstEmpty > i) {
-                    firstEmpty = i;
-                    isEmptySet = true;
-                    i ++;
-                }
-            }
-            if (slots.get(i).hasTask() && isEmptySet) {
-                if (i > firstEmpty) {
-                    TimeSlot currSlot = slots.get(i);
-                    TimeSlot newSlot = slots.get(firstEmpty);
-                    ACalendarItem currTask = currSlot.getItem();
-                    currSlot.removeItem();
-                    newSlot.setItem(currTask);
-                    isEmptySet = false;
-                    i = firstEmpty + 1;
-                }
-            }
-            else {
-                i++;
+        for  (int i = 0; i < n; i++) {
+            TimeSlot tms = slots.get(i);
+            if (tms.hasTask()) {
+                moveTaskUp(tms, i, slots);
             }
         }
-        Log.d("BEST", slots.toString());
         this.availableSlots = slots;
-        this.items = createPIItemsSimple();
-        //createPIItems();
+        createPIItems();
+
+    }
+
+
+
+    public void moveTaskUp(TimeSlot item, int index, ArrayList<TimeSlot> slotsA) {
+        for (TimeSlot ts : slotsA) {
+            if (ts.isSlotAvailableForTask((TaskPI) item.getItem())) {
+                ts.setItem(item.getItem());
+                slotsA.get(index).setItem(null);
+            }
+        }
     }
 
 
@@ -336,7 +328,7 @@ public class PenciledInSchedule {
                 PenciledInItem newCombo = combine(prev, curr);
                 oldSchedule.set(i, newCombo);
                 oldSchedule.remove(prev);
-                n--;
+                n = oldSchedule.size();
             }
             else {
                 collapsedScheduled.add(curr);
