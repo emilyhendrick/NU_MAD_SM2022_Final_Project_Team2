@@ -26,7 +26,7 @@ public class PenciledInSchedule {
     ArrayList<TimeSlot> availableSlots;
     Date startConstraint;
     Date endConstraint;
-    int INTERVAL = 5;
+    int INTERVAL = 15;
     // in 24 hours time;
     int STARTHOUR = 9;
     int ENDHOUR = 17;
@@ -172,6 +172,7 @@ public class PenciledInSchedule {
         }
         Log.d("worst -tasks ", this.tasksInProgress.toString());
         Log.d("worst", slots.toString());
+        Collections.reverse(slots);
         return slots;
     }
 
@@ -254,7 +255,8 @@ public class PenciledInSchedule {
         }
         Log.d("BEST", slots.toString());
         this.availableSlots = slots;
-        createPIItems();
+        this.items = createPIItemsSimple();
+        //createPIItems();
     }
 
 
@@ -314,6 +316,7 @@ public class PenciledInSchedule {
                schedule.add(it);
             }
         }
+        Log.d("repeated in slots", schedule.toString());
         return schedule;
     }
 
@@ -340,6 +343,7 @@ public class PenciledInSchedule {
                 i++;
             }
         }
+        Log.d("collapsed in slots", oldSchedule.toString());
         this.items = oldSchedule;
     }
 
@@ -351,8 +355,8 @@ public class PenciledInSchedule {
      * @return event/task of both combined
      */
     public PenciledInItem combine(PenciledInItem prev, PenciledInItem curr) {
-        return new PenciledInItem(prev.itemName, prev.taskStartDate,
-                curr., prev.taskStartDate, curr.taskDueDate, prev.category, false, true, false, prev.type, newTask);
+        return new PenciledInItem(prev.itemName, prev.getScheduledStartDate(),
+                curr.getScheduledEndDate(), prev.getCategory(), prev.getDone(), true, false, prev.type, prev.task_due_date);
     }
 
     /**

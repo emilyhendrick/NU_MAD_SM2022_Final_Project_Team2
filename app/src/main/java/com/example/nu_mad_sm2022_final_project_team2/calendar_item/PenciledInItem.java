@@ -116,14 +116,6 @@ public class PenciledInItem {
         this.itemName = itemName;
     }
 
-    public Date getTaskStartDate() {
-        return taskStartDate;
-    }
-
-    public void setTaskStartDate(Date taskStartDate) {
-        this.taskStartDate = taskStartDate;
-    }
-
 
     public Date getScheduledStartDate() {
         return scheduledStartDate;
@@ -187,6 +179,14 @@ public class PenciledInItem {
 
     public void setTask_due_date(Date task_due_date) {
         this.task_due_date = task_due_date;
+    }
+
+    @Override
+    public String toString() {
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
+        String start = dateFormat.format(this.scheduledStartDate);
+        String end = dateFormat.format(this.scheduledEndDate);
+        return this.getItemName() + "starts: " + start + " ends: " + end;
     }
 }
 
