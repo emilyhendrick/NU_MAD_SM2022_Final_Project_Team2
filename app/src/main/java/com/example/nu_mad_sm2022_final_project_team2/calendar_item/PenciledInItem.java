@@ -29,12 +29,14 @@ public class PenciledInItem {
         this.type = type;
     }
 
-    public PenciledInItem(ACalendarItem ca) {
+    public PenciledInItem(ACalendarItem ca, Date starttime, Date endtime) {
         if (ca.isTask()) {
             TaskPI t = (TaskPI) ca;
             this.itemName = t.item_name;
             this.taskStartDate = t.getStart_date();
             this.taskDueDate = t.getEnd_date();
+            this.scheduledStartDate = starttime;
+            this.scheduledEndDate = endtime;
             this.done = t.getDone();
             this.type = ItemType.TypeTask;
             this.category = t.getCategory();

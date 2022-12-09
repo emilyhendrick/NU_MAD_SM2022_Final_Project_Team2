@@ -71,7 +71,7 @@ public abstract class ACalendarItem implements ICalendarItem{
         Date now = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
         long diff = end_date.getTime() - now.getTime();
         long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
         String strDate = dateFormat.format(end_date);
         String today = dateFormat.format(now);
         return "Due: " + strDate;

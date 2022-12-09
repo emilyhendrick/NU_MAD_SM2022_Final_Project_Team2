@@ -190,8 +190,8 @@ public class EditTaskFragment extends Fragment {
     private void populateExistingTask() {
         editTaskNameInput.setText(task.getItem_name());
         editDurationInput.setText(Integer.toString(task.getDuration()));
-        btn_start_time.setText(task.dateToDateString(task.getStart_date()));
-        btn_start_date.setText(task.timeToTimeString(task.getStart_date()));
+        btn_start_time.setText(task.timeToTimeString(task.getStart_date()));
+        btn_start_date.setText(task.dateToDateString(task.getStart_date()));
         btn_due_date.setText(task.dateToDateString(task.getEnd_date()));
         btn_due_time.setText(task.timeToTimeString(task.getEnd_date()));
 

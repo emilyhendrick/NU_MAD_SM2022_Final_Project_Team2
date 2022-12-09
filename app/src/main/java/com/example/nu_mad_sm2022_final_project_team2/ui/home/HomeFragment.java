@@ -104,6 +104,8 @@ public class HomeFragment extends Fragment {
 
         calendarItems = root.findViewById(R.id.calendarRecyclerView);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
+        Log.d("TASKS", tasks.toString());
+        Log.d("EVENTS", events.toString());
         PenciledInSchedule sched = new PenciledInSchedule(tasks, events);
         taskAdapter = new CalendarViewAdapter(sched);
         calendarItems.setLayoutManager(recyclerViewLayoutManager);
@@ -135,11 +137,6 @@ public class HomeFragment extends Fragment {
                         ArrayList<Event> e = user.getEvents();
                         PenciledInSchedule sched = new PenciledInSchedule(t, e);
                         sched.getItems();
-                        //String log = "Items" + sched.getItems().toString();
-                        //Log.d("ITEMS", log);
-                        Log.d("Events", user.getEvents().toString());
-                        Log.d("Tasks", user.getTasks().toString());
-                        Toast.makeText(getContext(), user.getEvents().toString(), Toast.LENGTH_SHORT).show();
                         taskAdapter = new CalendarViewAdapter(sched);
                         calendarItems.setLayoutManager(recyclerViewLayoutManager);
                         calendarItems.setAdapter(taskAdapter);

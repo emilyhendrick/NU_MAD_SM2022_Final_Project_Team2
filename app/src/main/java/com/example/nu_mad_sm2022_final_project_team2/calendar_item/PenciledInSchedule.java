@@ -1,9 +1,16 @@
 package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.google.api.LogDescriptor;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +35,7 @@ public class PenciledInSchedule {
         this.availableEvents = availableEvents;
         this.availableSlots = availableSlots;
         validateAndCreate();
+
     }
 
     public PenciledInSchedule(User u) {
@@ -97,7 +105,7 @@ public class PenciledInSchedule {
     }
 
     public Date getLastDeadline() {
-        ArrayList<TaskPI> ts =this.availableTasks;
+        ArrayList<TaskPI> ts = this.availableTasks;
         Collections.sort(ts, new Comparator<TaskPI>(){
             public int compare(TaskPI o1, TaskPI o2){
                 Date d1 = o1.getEnd_date();
@@ -105,19 +113,26 @@ public class PenciledInSchedule {
                 return (d1.compareTo(d2));
             }
         });
-        return ts.get(0).getEnd_date();
+        return ts.get(ts.size()-1).getEnd_date();
     }
 
     public Date getFirstStartDate() {
-        ArrayList<TaskPI> ts =this.availableTasks;
-        Collections.sort(ts, new Comparator<TaskPI>(){
-            public int compare(TaskPI o1, TaskPI o2){
-                Date d1 = o1.getStart_date();
-                Date d2 = o2.getStart_date();
-                return (d1.compareTo(d2));
-            }
-        });
-        return ts.get(0).getStart_date();
+        ArrayList<TaskPI> ts = this.availableTasks;
+        if (ts.size() > 0) {
+            Collections.sort(ts, new Comparator<TaskPI>(){
+                public int compare(TaskPI o1, TaskPI o2){
+                    Date d1 = o1.getStart_date();
+                    Date d2 = o2.getStart_date();
+                    return (d1.compareTo(d2));
+                }
+            });
+            return ts.get(0).getStart_date();
+        }
+        else {
+            LocalDateTime ldt = LocalDateTime.now();
+            return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+        }
+
 
     }
 
@@ -131,49 +146,61 @@ public class PenciledInSchedule {
         long mins = TimeUnit.MILLISECONDS.toMinutes(diff);
         // split into intervals of time based on constant
         int ints = (int) Math.floor(mins/INTERVAL);
+        Log.d("intervals", Integer.toString(ints));
 
         for (int i=0; i<ints; i++) {
-            Date startPlusIntr = this.addDurationtoDate(s, INTERVAL);
-            long hourInDay = TimeUnit.MILLISECONDS.toHours(s.getTime());
-            // if within working hours
-            if (STARTHOUR < hourInDay & hourInDay < ENDHOUR) {
-                TimeSlot ts = new TimeSlot(s, startPlusIntr);
+            DateFormat dateFormat = new SimpleDateFormat("k");
+            String strHour = dateFormat.format(s);
+            long hourInDay = Integer.parseInt(strHour);
+            Date endTime = addDurationtoDate(s, INTERVAL);
+            // if within working hours add to slots
+            if (STARTHOUR <= hourInDay & hourInDay <= ENDHOUR) {
+                TimeSlot ts = new TimeSlot(s, endTime);
                 slots.add(ts);
+                s = addDurationtoDate(endTime, 1);
             }
-            s = this.addDurationtoDate(startPlusIntr, 1);
+            else {
+                s = this.addDurationtoDate(endTime, 1);
+            }
         }
+        Log.d("emptyslots", slots.toString());
         return slots;
     }
 
     public ArrayList<TimeSlot> addEventsToSlots(ArrayList<TimeSlot> emSlots) {
-        if (this.availableSlots != null) {
-        for (int i = 0; i < emSlots.size(); ++i) {
-
-            for(int j = 0; j < this.availableEvents.size(); ++j) {
-                if (eventAtDate(availableEvents.get(j), emSlots.get(i)) ) {
-                    emSlots.get(i).setItem(availableEvents.get(j));
+        if (this.availableEvents != null) {
+        for (TimeSlot ts : emSlots) {
+            for (Event e :  this.availableEvents) {
+                if (eventAtDate(e, ts) ) {
+                    ts.setItem(e);
                 }
             }
         }
         }
+        Log.d("events available", this.availableEvents.toString());
+        Log.d("events added", emSlots.toString());
         return emSlots;
     }
 
     public ArrayList<TimeSlot> createWorstCaseSchedule() {
         ArrayList<TimeSlot> slots = this.createEmptySlots();
         this.addEventsToSlots(slots);
+        //reverse list
+        Collections.reverse(slots);
         ArrayList<TaskPI>  sortedT = sortTasksByPayoff(this.availableTasks);
-        int n = sortedT.size();
-        int s = slots.size();
+
         // iterate through all tasks
-        for (int i = 0; i < n; ++ i) {
+        for (TaskPI tsk : sortedT) {
             // find free slot for task starting from last possible slot
-            for (int j=s; j > 0; --j ){
-                if (slots.get(j).isSlotAvailableForTask(sortedT.get(i))) {
-                    slots.get(j).setItem(sortedT.get(i));
+            for (TimeSlot ts : slots){
+                if (ts.isSlotAvailableForTask(tsk)) {
+                    ts.setItem(tsk);
                 }
             }
         }
+        // reverse back
+        Collections.reverse(slots);
+        Log.d("WORST", slots.toString());
         return slots;
     }
 
@@ -208,7 +235,9 @@ public class PenciledInSchedule {
                 i++;
             }
         }
+        Log.d("BEST", slots.toString());
         this.availableSlots = slots;
+        createPIItems();
     }
 
 
@@ -222,31 +251,26 @@ public class PenciledInSchedule {
      * @return true if there is an overlap
      */
     public Boolean eventAtDate(Event e, TimeSlot slot) {
-        Date eventStart = e.getStart_date();
-        Date eventEnd = e.getEnd_date();
-        Date slotStart = slot.getStartTime();
-        Date slotEnd = slot.getEndTime();
+        Date start1 = e.getStart_date();
+        Date end1 = e.getEnd_date();
+        Date start2 = slot.getStartTime();
+        Date end2 = slot.getEndTime();
+        Log.d("test 1 event",e.toString());
+        Log.d("test 1slot",slot.toString());
+        Log.d("test 1overlapping", String.valueOf(start1.before(end2) && start2.before(end1)));
 
-        // event ends before slot starts
-        if (eventEnd.compareTo(slotStart) < 0) {
-            return false;
-        }
-        // event ends after slot starts
-        else {
-            // event begins after or when slot begins
-            if (eventStart.compareTo(slotStart) > 0 || eventStart.compareTo(slotStart) == 0) {
-                return true;
-            }
-            // event begins before slot begins
-            else{
-                return false;
-            }
-        }
+        return start1.before(end2) && start2.before(end1);
+
     }
 
     public void validateAndCreate() {
-        if (this.availableTasks != null & this.availableSlots != null) {
-            createSchedule();
+        if (this.availableTasks != null & this.availableEvents != null) {
+            if (this.availableTasks.size() > 0) {
+                createSchedule();
+            }
+            else {
+                createPIItemsEventsOnly();
+            }
         }
     }
 
@@ -268,11 +292,27 @@ public class PenciledInSchedule {
         for (int i = 0; i < n; i++) {
             // has task or event
             if (!(slots.get(i).isFree())) {
-               PenciledInItem it = new PenciledInItem(slots.get(i).getItem());
+                TimeSlot slot = slots.get(i);
+               PenciledInItem it = new PenciledInItem(slot.getItem(), slot.getStartTime(), slot.getEndTime());
                schedule.add(it);
             }
         }
-        return;
+        this.items = schedule;
+        Log.d("ITEMSCREATED", this.items.toString());
     }
 
-}
+    /**
+     * Based on the scheduled available slots created corresponding PenciledInItems
+     */
+    public void createPIItemsEventsOnly() {
+        ArrayList<PenciledInItem> schedule = new ArrayList<>();
+        int n = availableEvents.size();
+        for (int i = 0; i < n; i++) {
+                PenciledInItem it = new PenciledInItem(availableEvents.get(i));
+                schedule.add(it);
+            }
+         this.items = schedule;
+        }
+
+    }
+

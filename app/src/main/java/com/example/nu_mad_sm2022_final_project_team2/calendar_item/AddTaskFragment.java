@@ -151,7 +151,6 @@ public class AddTaskFragment extends Fragment {
                     String item_name = inp_txt_task_name.getText().toString();
                     String start_date = btn_start_date_date.getText().toString();
                     String due_date = btn_due_date_date.getText().toString();
-                    Log.d("DUE", due_date);
                     String start_time = btn_start_date_time.getText().toString();
                     String due_time = btn_due_date_time.getText().toString();
                     String category = spin_categories.getSelectedItem().toString();
@@ -224,7 +223,7 @@ public class AddTaskFragment extends Fragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                String amOrPm = selectedHour < 12 ? "AM" : "PM";
+                String amOrPm = selectedHour < 12 ? "PM" : "AM";
                 if (selectedHour == 0) {
                     selectedHour = 12;
                 } if (selectedHour > 12) {
@@ -240,14 +239,6 @@ public class AddTaskFragment extends Fragment {
     }
 
 
-    private String getAMPM(Switch ampm) {
-        if (ampm.isChecked()) {
-            return "am";
-        }
-        else {
-            return "pm";
-        }
-    }
     private void showDatePicker(Button btn) {
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);

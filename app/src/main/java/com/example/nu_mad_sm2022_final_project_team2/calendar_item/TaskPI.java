@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -92,6 +94,14 @@ public class TaskPI extends ACalendarItem implements Comparable<TaskPI> {
 
         }
         this.isDone = true;
+    }
+
+    @Override
+    public String toString() {
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
+        String start = dateFormat.format(this.start_date);
+        String end = dateFormat.format(this.end_date);
+        return this.getItem_name() + "starts: " + start + " ends: " + end;
     }
 
 }

@@ -13,6 +13,8 @@ import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInIte
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInSchedule;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
@@ -62,7 +64,9 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
         PenciledInItem curTask = this.items.get(position);
 
         holder.calendarEventName.setText(curTask.getItemName());
-        holder.calendarEventTime.setText(curTask.getItemName());
+        DateFormat dateFormat = new SimpleDateFormat("M, d hh:mm a");
+        String startDate = dateFormat.format(curTask.getScheduledStartDate());
+        holder.calendarEventTime.setText(startDate);
     }
 
     @Override

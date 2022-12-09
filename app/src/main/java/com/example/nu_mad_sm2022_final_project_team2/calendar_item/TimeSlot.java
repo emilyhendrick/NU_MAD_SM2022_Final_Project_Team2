@@ -1,5 +1,7 @@
 package com.example.nu_mad_sm2022_final_project_team2.calendar_item;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TimeSlot {
@@ -48,7 +50,12 @@ public class TimeSlot {
     }
 
     public Boolean hasTask() {
-        return this.item.isTask();
+        if (this.item != null) {
+            return this.item.isTask();
+        }
+        else {
+            return false;
+        }
     }
 
     public void removeItem() {
@@ -63,6 +70,19 @@ public class TimeSlot {
         // slot is free and task starts at the
         // same time or after timeslot starts
         return (this.isFree() && (taskStart.compareTo(slotStart) >= 0) && (taskDue.compareTo(slotEnd) < 0));
+    }
+
+    @Override
+    public String toString() {
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
+        String start = dateFormat.format(this.startTime);
+        String end = dateFormat.format(this.endTime);
+        if (this.item != null ) {
+            return this.item.getItem_name() ;
+        }
+        else {
+            return "EMPTY starts: " + start + " ends: " + end;
+        }
     }
 
 }
