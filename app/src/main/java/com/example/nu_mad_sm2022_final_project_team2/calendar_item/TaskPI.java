@@ -8,20 +8,37 @@ import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 import java.util.Date;
 import java.util.Random;
 
-public class TaskPI extends ACalendarItem{
+public class TaskPI extends ACalendarItem implements Comparable<TaskPI> {
 
     private int duration;
+    private int priority;
 
     public TaskPI() {super("", "", "", "");}
 
-    public TaskPI(String item_name, Date start_date, Date end_date, String category, int duration) {
+    public TaskPI(String item_name, Date start_date, Date end_date, String category, int duration, int priority) {
         super(item_name, start_date, end_date, category);
         this.duration = duration;
+        this.priority = priority;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public TaskPI(String item_name, String start_date, String end_date, String category, int duration, int priority) {
+        super(item_name, start_date, end_date, category);
+        this.duration = duration;
+        this.priority = priority;
     }
 
     public TaskPI(String item_name, String start_date, String end_date, String category, int duration) {
         super(item_name, start_date, end_date, category);
         this.duration = duration;
+        this.priority = 0;
     }
 
     public int getDuration() {
@@ -50,5 +67,21 @@ public class TaskPI extends ACalendarItem{
     @Override
     public void schedule(Context applicationContext) {
         Toast.makeText(applicationContext, "TaskPI added!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public int compareTo(TaskPI o) {
+        if(this.getPriority() > o.getPriority()) {
+            return 1;
+        }
+        else if (this.getPriority() == o.getPriority()) {
+            return 0;
+        }
+        return -1;
+    }
+
+    @Override
+    Boolean isTask() {
+        return true;
     }
 }

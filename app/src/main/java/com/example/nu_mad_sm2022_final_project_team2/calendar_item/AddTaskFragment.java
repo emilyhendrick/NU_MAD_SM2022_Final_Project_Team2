@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
-import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +30,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,10 +48,11 @@ public class AddTaskFragment extends Fragment {
     private AddTaskFragment.IAddTaskFragmentAction mListener;
 
     private Button btn_add_event, btn_add_task, btn_add_task_nav,  btn_start_date_date, btn_due_date_date, btn_start_date_time, btn_due_date_time;
-    private EditText inp_txt_task_name, inp_duration_number, inp_start_date, inp_due_date;
+    private EditText inp_txt_task_name, inp_duration_number, inp_start_date, inp_due_date, inp_priority;
     private Switch start_date_am_pm, due_date_am_pm;
     private DatePicker pick_date;
     private TimePicker pick_time;
+    private User user;
     private Spinner spin_categories;
 
 
@@ -92,20 +95,14 @@ public class AddTaskFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_task, container, false);
         // btn_set_start_date, btn_set_due_date;
         btn_start_date_date = view.findViewById(R.id.btn_start_date_date);
-        ViewGroup mContainer = container;
-        int id = ((View) mContainer.getParent().getParent()).getId();
-        String t = Integer.toString(id);
-        Log.d("idishereisthetag", t);
-        Toast.makeText(getContext(), t, Toast.LENGTH_SHORT).show();
         btn_due_date_date = view.findViewById(R.id.btn_due_date_date);
         btn_start_date_time= view.findViewById(R.id.btn_start_date_time);
         btn_due_date_time = view.findViewById(R.id.btn_due_date_time);
         btn_add_task_nav = view.findViewById(R.id.btn_add_task_nav);
-        start_date_am_pm = view.findViewById(R.id.start_date_am_pm);
-        due_date_am_pm = view.findViewById(R.id.due_date_am_pm);
-        btn_add_task = view.findViewById(R.id.btn_add_task);
+        btn_add_task = view.findViewById(R.id.btn_save_event);
         inp_txt_task_name = view.findViewById(R.id.inp_txt_task_name);
-        inp_duration_number = view.findViewById(R.id.inp_duration_number);
+        inp_priority = view.findViewById(R.id.inp_priority);
+        inp_duration_number = view.findViewById(R.id.txt_inp_location);
         btn_add_event = view.findViewById(R.id.btn_add_event);
 
 
@@ -150,23 +147,34 @@ public class AddTaskFragment extends Fragment {
 
                 if (validateInputs(inp_txt_task_name, inp_duration_number,
                         spin_categories, btn_start_date_date, btn_start_date_time,
-                        btn_due_date_date, btn_due_date_time)) {
+                        btn_due_date_date, btn_due_date_time, inp_priority)) {
                     String item_name = inp_txt_task_name.getText().toString();
                     String start_date = btn_start_date_date.getText().toString();
                     String due_date = btn_due_date_date.getText().toString();
+                    Log.d("DUE", due_date);
                     String start_time = btn_start_date_time.getText().toString();
                     String due_time = btn_due_date_time.getText().toString();
                     String category = spin_categories.getSelectedItem().toString();
-                    int duration = Integer.parseInt(inp_duration_number.getText().toString());
+                    String duration_str = inp_duration_number.getText().toString();
+                    String priority_str = inp_priority.getText().toString();
+
+                    List<String> fieldNames = Arrays.asList("taskName", "startDate", "dueDate", "startTime", "dueTime", "category", "duration", "priority");
+                    List<String> fields = Arrays.asList(item_name, start_date, due_date, start_time, due_time, category, duration_str, priority_str);
+                    for (int i=0; i<fields.size(); i++) {
+                        if (Objects.equals(fields.get(i), "")) {
+                            Toast.makeText(getContext(), "Field '" + fieldNames.get(i) + "' is missing", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                    int duration = Integer.parseInt(duration_str);
+                    int priority = Integer.parseInt(priority_str);
                     String startDateTime = start_date + "T" + start_time;
                     String dueDateTime = due_date + "T" + due_time;
-                    TaskPI newItem = new TaskPI(item_name, startDateTime, dueDateTime, category, duration);
+                    TaskPI newItem = new TaskPI(item_name, startDateTime, dueDateTime, category, duration, priority);
                     addTaskInDatabase(newItem);
                 }
                 else {
-                    String toast = inp_txt_task_name.getText().toString();
-                    Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(getContext(), "You must complete the entire form.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "You must complete the entire form.", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -190,7 +198,7 @@ public class AddTaskFragment extends Fragment {
 
     private Boolean validateInputs(EditText taskname,
                                    EditText dur, Spinner cat, Button start_date,
-                                   Button start_time, Button due_date, Button due_time) {
+                                   Button start_time, Button due_date, Button due_time, EditText priority) {
         Log.d("valTaskname", String.valueOf(taskname==null));
         Log.d("valDur", String.valueOf(dur==null));
         Log.d("valCat", String.valueOf(cat==null));
@@ -198,7 +206,7 @@ public class AddTaskFragment extends Fragment {
         Log.d("valStartTime", String.valueOf(start_time==null));
         return !(taskname == null || dur == null ||
                 cat == null || start_date == null  ||
-                start_time == null ||
+                start_time == null || priority == null ||
                 validateDateTime(start_date, start_time) || validateDateTime(due_date, due_time));
 
     }
@@ -293,7 +301,7 @@ public class AddTaskFragment extends Fragment {
         return retTasks;
     }
 
-    private void updateTasks(ArrayList<TaskPI> tasks, ACalendarItem newTask) {
+    private void updateTasks(ArrayList<TaskPI> tasks, TaskPI newTask) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .update("tasks", tasks);

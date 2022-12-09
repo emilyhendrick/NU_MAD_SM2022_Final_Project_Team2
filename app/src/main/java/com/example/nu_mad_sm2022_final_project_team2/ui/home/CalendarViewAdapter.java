@@ -63,6 +63,11 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     @Override
     public int getItemCount() {
-        return this.tasks.size();
+        if (tasks == null) {
+            return 0;
+        }
+        else {
+            return this.tasks.size();
+        }
     }
 }

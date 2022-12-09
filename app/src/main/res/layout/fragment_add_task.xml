@@ -10,7 +10,7 @@
 
 
     <EditText
-        android:id="@+id/inp_duration_number"
+        android:id="@+id/txt_inp_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -40,25 +40,23 @@
         android:id="@+id/spin_categories"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="88dp"
+        android:entries="@array/categories_array"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.165"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inp_duration_number"
-        android:entries="@array/categories_array" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_inp_location" />
 
     <Button
-        android:id="@+id/btn_add_task"
+        android:id="@+id/btn_save_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginBottom="64dp"
         android:text="@string/saveTask"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spin_categories"
-        app:layout_constraintVertical_bias="0.862" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_add_event"
@@ -83,16 +81,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Switch
-        android:id="@+id/start_date_am_pm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:text="am/pm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
     <Button
         android:id="@+id/btn_start_date_date"
         android:layout_width="wrap_content"
@@ -110,8 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="@string/pickTime"
-        app:layout_constraintEnd_toStartOf="@+id/start_date_am_pm"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_start_date_date"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -136,17 +123,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_start_date_date" />
 
-    <Switch
-        android:id="@+id/due_date_am_pm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="am/pm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_due_date_time"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
     <Button
         android:id="@+id/btn_due_date_date"
         android:layout_width="wrap_content"
@@ -164,10 +140,37 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/pickTime"
-        app:layout_constraintEnd_toStartOf="@+id/due_date_am_pm"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_due_date_date"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/Minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Minutes"
+        app:layout_constraintBottom_toTopOf="@+id/inp_priority"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toEndOf="@+id/txt_inp_location"
+        app:layout_constraintTop_toBottomOf="@+id/inp_txt_task_name"
+        app:layout_constraintVertical_bias="0.17" />
+
+    <EditText
+        android:id="@+id/inp_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/priority"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/spin_categories"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_inp_location"
+        app:layout_constraintVertical_bias="0.259" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -14,12 +14,19 @@ import java.util.Date;
 
 public class Event extends ACalendarItem {
     private Date end_time;
+    private String location;
 
     public Event() {super("", "", "", "");}
 
-    public Event(String item_name, Date start_date, Date end_date, String category) {
+    public Event(String item_name, Date start_date, Date end_date, String category, String location) {
         super(item_name, start_date, end_date, category);
-        this.end_date = end_date;
+        this.location = location;
+    }
+
+
+    public Event(String item_name, String start_date, String end_date, String category, String location) {
+        super(item_name, start_date, end_date, category);
+        this.location = location;
     }
 
 
@@ -41,7 +48,11 @@ public class Event extends ACalendarItem {
     @Override
     public void schedule(Context applicationContext) {
 
-        Toast.makeText(applicationContext, "TaskPI added!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(applicationContext, "Event added!", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    Boolean isTask() {
+        return false;
+    }
 }

@@ -39,6 +39,8 @@ public abstract class ACalendarItem implements ICalendarItem{
             this.end_date = ACT_DATE_FORMAT.parse(ACT_DATE_FORMAT.format(EXP_DATE_FORMAT.parse(end_date)));
         } catch (ParseException e) {
             e.printStackTrace();
+            this.start_date = new Date();
+            this.end_date = new Date();
         }
         this.isDone = false;
     }
@@ -67,9 +69,12 @@ public abstract class ACalendarItem implements ICalendarItem{
     public String getEnd_date_asString() {
         LocalDateTime ldt = LocalDateTime.now();
         Date now = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        long diff = now.getTime() - end_date.getTime();
+        long diff = end_date.getTime() - now.getTime();
         long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        return "due in " + String.valueOf(diffDays) + " days";
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm");
+        String strDate = dateFormat.format(end_date);
+        String today = dateFormat.format(now);
+        return "Due: " + strDate;
     }
 
     public void setEnd_date(Date end_date) {
@@ -102,5 +107,7 @@ public abstract class ACalendarItem implements ICalendarItem{
         String strDate = dateFormat.format(t);
         return strDate;
     }
+
+    abstract Boolean isTask();
 
 }

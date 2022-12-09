@@ -16,11 +16,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.AlarmFrequency;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,6 +55,7 @@ public class EditTaskFragment extends Fragment {
     private EditText editTaskNameInput, editDurationInput, editPriorityInput, editCategoryInput, taskLocationInput, taskBlockerInput, editTextStartDate, editEndDate;
     private Button saveChangesButton, btn_start_date, btn_due_date, btn_start_time, btn_due_time;
     private ImageView editTaskLeftArrow;
+    private Spinner cat_spinner;
 
     public EditTaskFragment() {
         // Required empty public constructor
@@ -106,6 +109,8 @@ public class EditTaskFragment extends Fragment {
         btn_start_date = view.findViewById(R.id.btn_start_date);
         btn_start_time = view.findViewById(R.id.btn_start_time);
         editTaskLeftArrow = view.findViewById(R.id.editTaskLeftArrow);
+        saveChangesButton = view.findViewById(R.id.saveChangesButton);
+        cat_spinner = view.findViewById(R.id.cat_spinner);
         populateExistingTask();
 
         btn_start_time.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +148,41 @@ public class EditTaskFragment extends Fragment {
             }
         });
 
+        saveChangesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (validateInputs(editTaskNameInput, editDurationInput,
+                        cat_spinner, btn_start_date, btn_start_time,
+                        btn_due_date, btn_due_time)) {
+                    String item_name = editTaskNameInput.getText().toString();
+                    String start_date = btn_start_date.getText().toString();
+                    String due_date = btn_due_date.getText().toString();
+                    String start_time = btn_start_time.getText().toString();
+                    String due_time = btn_due_time.getText().toString();
+                    String category = cat_spinner.getSelectedItem().toString();
+                    int duration = Integer.parseInt(editDurationInput.getText().toString());
+                    String startDateTime = start_date + "T" + start_time;
+                    String dueDateTime = due_date + "T" + due_time;
+                    TaskPI newItem = new TaskPI(item_name, startDateTime, dueDateTime, category, duration);
+                    updateTaskInDatabase(newItem);
+                    Toast.makeText(getContext(), "Supposedly did the thing", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "You must complete the entire form!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        saveChangesButton = view.findViewById(R.id.saveChangesButton);
+//        saveChangesButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mListener.addTaskButtonClicked();
+//            }
+//        });
+
 
         return view;
     }
@@ -155,6 +195,64 @@ public class EditTaskFragment extends Fragment {
         btn_due_date.setText(task.dateToDateString(task.getEnd_date()));
         btn_due_time.setText(task.timeToTimeString(task.getEnd_date()));
 
+    }
+
+
+    private void addTaskInDatabase(TaskPI newTask) {
+        db.collection("users")
+                .document(mUser.getEmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            User user = task.getResult().toObject(User.class);
+                            ArrayList<TaskPI> tasks = user.getTasks();
+                            tasks = insertTaskIntoSortedTasks(tasks, newTask);
+                            updateTasks(tasks, newTask);
+                            newTask.schedule(getActivity().getApplicationContext());
+                            mListener.editTaskDone();
+                        }
+                    }
+                });
+    }
+
+    private ArrayList<TaskPI> insertTaskIntoSortedTasks(ArrayList<TaskPI> tasks, TaskPI newTask) {
+        ArrayList<TaskPI> retTasks;
+        if (tasks == null) {
+            retTasks = new ArrayList<TaskPI>();
+            retTasks.add(newTask);
+        }
+        else {
+            retTasks = tasks;
+            retTasks.add(newTask);
+        }
+        return retTasks;
+    }
+
+    private void updateTasks(ArrayList<TaskPI> tasks, TaskPI newTask) {
+        db.collection("users")
+                .document(mUser.getEmail())
+                .update("tasks", tasks);
+    }
+
+    private Boolean validateInputs(EditText taskname,
+                                   EditText dur, Spinner cat, Button start_date,
+                                   Button start_time, Button due_date, Button due_time) {
+        Log.d("valTaskname", String.valueOf(taskname==null));
+        Log.d("valDur", String.valueOf(dur==null));
+        Log.d("valCat", String.valueOf(cat==null));
+        Log.d("valStartDate", String.valueOf(start_date==null));
+        Log.d("valStartTime", String.valueOf(start_time==null));
+        return !(taskname == null || dur == null ||
+                cat == null || start_date == null  ||
+                start_time == null ||
+                validateDateTime(start_date, start_time) || validateDateTime(due_date, due_time));
+
+    }
+
+    private Boolean validateDateTime(Button bdate, Button btime) {
+        return (bdate.getText().toString() == "Pick Date" || btime.getText().toString() == "Pick Time");
     }
 
 
@@ -251,7 +349,7 @@ public class EditTaskFragment extends Fragment {
                 });
     }
 
-    private void updateTasks(ArrayList<TaskPI>tasks) {
+    private void updateTasks(ArrayList<TaskPI> tasks) {
         db.collection("users")
                 .document(mUser.getEmail())
                 .update("tasks", tasks);
@@ -261,5 +359,6 @@ public class EditTaskFragment extends Fragment {
     public interface IEditTaskFragmentAction {
         void editTaskBackArrowClicked();
         void editTaskDone();
+        void addTaskButtonClicked();
     }
 }

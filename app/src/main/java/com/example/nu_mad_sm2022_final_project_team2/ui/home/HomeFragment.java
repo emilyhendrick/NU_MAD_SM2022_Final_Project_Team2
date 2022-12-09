@@ -1,21 +1,32 @@
 package com.example.nu_mad_sm2022_final_project_team2.ui.home;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.nu_mad_sm2022_final_project_team2.User;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.Event;
 import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 import com.example.nu_mad_sm2022_final_project_team2.databinding.FragmentHomeBinding;
 import com.example.nu_mad_sm2022_final_project_team2.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,6 +37,11 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private static ArrayList<TaskPI> tasks;
+    private static ArrayList<Event> events;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private FirebaseFirestore db;
+    User currUser;
 
     private FragmentHomeBinding binding;
     private RecyclerView calendarItems;
@@ -34,13 +50,16 @@ public class HomeFragment extends Fragment {
     private TextView displayDate;
 
     public HomeFragment() {
+
         tasks = new ArrayList<TaskPI>();
+        events = new ArrayList<Event>();
     }
 
-    public static HomeFragment newInstance(ArrayList<TaskPI> userTasks) {
+    public static HomeFragment newInstance(ArrayList<TaskPI> userTasks, ArrayList<Event> userEvents) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         tasks = userTasks;
+        events = userEvents;
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +67,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -60,6 +82,7 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+
         calendarItems = root.findViewById(R.id.calendarRecyclerView);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
         taskAdapter = new CalendarViewAdapter(tasks);
@@ -71,6 +94,8 @@ public class HomeFragment extends Fragment {
         String date = df.format(Calendar.getInstance().getTime());
         displayDate.setText(date);
 
+        loadProfile(root);
+
         return root;
     }
 
@@ -79,4 +104,20 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+    private void loadProfile(View view) {
+        db.collection("users").document(mUser.getEmail()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        ArrayList<TaskPI> t = user.getTasks();
+                        taskAdapter = new CalendarViewAdapter(user.getTasks());
+                        calendarItems.setLayoutManager(recyclerViewLayoutManager);
+                        calendarItems.setAdapter(taskAdapter);
+                    }
+                });
+    }
+
 }

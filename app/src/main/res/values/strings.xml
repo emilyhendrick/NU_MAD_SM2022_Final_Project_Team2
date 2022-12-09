@@ -60,6 +60,9 @@
     <string name="newEvent">New Event</string>
     <string name="pickDate">Pick Date</string>
     <string name="pickTime">Pick Time</string>
+    <string name="priorityInfo">Choose a number that represents the payoff value of completing this
+        task. For example, a task with a payoff of 10 is twice as beneficial to you as a task with
+        a  payoff of 5.</string>
     <string name="close">Close</string>
 
     // event

@@ -505,9 +505,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
 
     @Override
     public void editTaskClicked(TaskPI task, int position) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, EditTaskFragment.newInstance(task, position), "editTaskFragment")
-                .commit();
+
     }
 
     @Override
@@ -530,6 +528,14 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     public void addEventButtonClicked() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment_activity_main, AddEventFragment.newInstance(), "addEventFragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void addEventDone() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, TasksFragment.newInstance(),"EventFragment")
                 .addToBackStack(null)
                 .commit();
     }
