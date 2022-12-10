@@ -218,6 +218,8 @@ public class EditAlarmFragment extends Fragment {
                 editAlarmTimeInput.setText(selectedHourStr + ":" + selectedMinuteStr);
             }
         }, currentHour, currentMinute, true);
+
+        timePickerDialog.show();
     }
 
     private AlarmFrequency getAlarmFrequency(int chosenOptionId) {
