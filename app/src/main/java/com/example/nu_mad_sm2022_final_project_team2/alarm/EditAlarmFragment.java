@@ -224,10 +224,10 @@ public class EditAlarmFragment extends Fragment {
 
     private AlarmFrequency getAlarmFrequency(int chosenOptionId) {
         switch (chosenOptionId) {
-            case R.id.addAlarmOnceOption: return AlarmFrequency.ONCE;
-            case R.id.addAlarmDailyOption: return AlarmFrequency.DAILY;
-            case R.id.addAlarmWeeklyOption: return AlarmFrequency.WEEKLY;
-            case R.id.addAlarmBiweeklyOption: return AlarmFrequency.BIWEEKLY;
+            case R.id.editAlarmOnceOption: return AlarmFrequency.ONCE;
+            case R.id.editAlarmDailyOption: return AlarmFrequency.DAILY;
+            case R.id.editAlarmWeeklyOption: return AlarmFrequency.WEEKLY;
+            case R.id.editAlarmBiweeklyOption: return AlarmFrequency.BIWEEKLY;
             default: return AlarmFrequency.ONCE;
         }
     }
