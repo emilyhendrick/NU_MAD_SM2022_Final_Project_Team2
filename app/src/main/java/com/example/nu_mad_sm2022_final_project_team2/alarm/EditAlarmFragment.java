@@ -254,7 +254,8 @@ public class EditAlarmFragment extends Fragment {
                         if (task.isSuccessful()) {
                             User user = task.getResult().toObject(User.class);
                             ArrayList<Alarm> alarms = user.getAlarms();
-                            alarms.set(index, newAlarm);
+                            alarms.remove(index);
+                            alarms = insertAlarmIntoSortedAlarms(alarms, newAlarm);
                             updateAlarms(alarms);
                             newAlarm.schedule(getActivity().getApplicationContext());
                             mListener.editAlarmDone();
@@ -291,6 +292,108 @@ public class EditAlarmFragment extends Fragment {
         db.collection("users")
                 .document(mUser.getEmail())
                 .update("alarms", alarms);
+    }
+
+    private ArrayList<Alarm> insertAlarmIntoSortedAlarms(ArrayList<Alarm> alarms, Alarm newAlarm) {
+        if (alarms.size() == 0) {
+            alarms.add(newAlarm);
+            return alarms;
+        }
+
+        if (newAlarm.isAM()) {
+            alarms = newAlarm.getHour() == 12 ? insert12AM(alarms, newAlarm) : insertAMAlarm(alarms, newAlarm);
+            return alarms;
+        } else {
+            alarms = newAlarm.getHour() == 12 ? insert12PM(alarms, newAlarm) : insertPMAlarm(alarms, newAlarm);
+            return alarms;
+        }
+    }
+
+    private ArrayList<Alarm> insertAMAlarm(ArrayList<Alarm> alarms, Alarm newAlarm) {
+        for (int i = 0; i < alarms.size(); i++) {
+            Alarm alarm = alarms.get(i);
+            if (!alarm.isAM()) {
+                alarms.add(i, newAlarm);
+                return alarms;
+            }
+
+            if (alarm.getHour() == newAlarm.getHour()) {
+                if (alarm.getMinute() > newAlarm.getMinute()) {
+                    alarms.add(i, newAlarm);
+                    return alarms;
+                }
+            }
+
+            if (alarm.getHour() != 12 && alarm.getHour() > newAlarm.getHour()) {
+                alarms.add(i, newAlarm);
+                return alarms;
+            }
+        }
+
+        alarms.add(newAlarm);
+        return alarms;
+    }
+
+    private ArrayList<Alarm> insert12AM(ArrayList<Alarm> alarms, Alarm newAlarm) {
+        int i = 0;
+        while (i < alarms.size() && alarms.get(i).isAM()) {
+            if (alarms.get(i).getHour() == 12) {
+                if (alarms.get(i).getMinute() > newAlarm.getMinute()) {
+                    alarms.add(i, newAlarm);
+                    return alarms;
+                }
+            } else {
+                alarms.add(i, newAlarm);
+                return alarms;
+            }
+            i++;
+        }
+
+        alarms.add(newAlarm);
+        return alarms;
+    }
+
+    private ArrayList<Alarm> insertPMAlarm(ArrayList<Alarm> alarms, Alarm newAlarm) {
+        for (int i = 0; i < alarms.size(); i++) {
+            Alarm alarm = alarms.get(i);
+            if (!alarm.isAM()) {
+                if (alarm.getHour() == newAlarm.getHour()) {
+                    if (alarm.getMinute() > newAlarm.getMinute()) {
+                        alarms.add(i, newAlarm);
+                        return alarms;
+                    }
+                }
+
+                if (alarm.getHour() != 12 && alarm.getHour() > newAlarm.getHour()) {
+                    alarms.add(i, newAlarm);
+                    return alarms;
+                }
+            }
+        }
+
+        alarms.add(newAlarm);
+        return alarms;
+    }
+
+    private ArrayList<Alarm> insert12PM(ArrayList<Alarm> alarms, Alarm newAlarm) {
+        int i = 0;
+        while (i < alarms.size()) {
+            if (!alarms.get(i).isAM()) {
+                if (alarms.get(i).getHour() == 12) {
+                    if (alarms.get(i).getMinute() > newAlarm.getMinute()) {
+                        alarms.add(i, newAlarm);
+                        return alarms;
+                    }
+                } else {
+                    alarms.add(i, newAlarm);
+                    return alarms;
+                }
+            }
+            i++;
+        }
+
+        alarms.add(newAlarm);
+        return alarms;
     }
 
     public interface IEditAlarmFragmentAction {
