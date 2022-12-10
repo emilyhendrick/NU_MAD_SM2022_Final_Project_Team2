@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     protected void onStart() {
         super.onStart();
-        //currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         createNotificationChannel();
         populateScreen();
     }
