@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NU_MAD_SM2022_Final_Project_Team2</string>
+    <string name="app_name">PenciledIn</string>
 
     // log in flow
     <string name="welcome">Welcome to PenciledIn!</string>
@@ -56,6 +56,32 @@
     <string name="location">Location:</string>
     <string name="blockers">Blockers:</string>
     <string name="saveTask">Save Task</string>
+    <string name="newTask">New Task</string>
+    <string name="newEvent">New Event</string>
+    <string name="pickDate">Pick Date</string>
+    <string name="pickTime">Pick Time</string>
+    <string name="priorityInfo">Choose a number that represents the payoff value of completing this
+        task. For example, a task with a payoff of 10 is twice as beneficial to you as a task with
+        a  payoff of 5.</string>
+    <string name="close">Close</string>
+
+    // event
+    <string name="editEvent">Add/Edit Event</string>
+    <string name="eventName">Event Name:</string>
+    <string name="eventLocation">Location:</string>
+    <string name="saveEvent">Save Event</string>
+    <string name="startTime">Start Time:</string>
+    <string name="endTime">End Time:</string>
+
+    // task /spinner category
+    <string-array name="categories_array">
+        <item>Self-Care</item>
+        <item>Work</item>
+        <item>School</item>
+        <item>Home</item>
+        <item>Social</item>
+        <item>Family</item>
+    </string-array>
 
     // alarm / wake-up task
     <string name="alarm">Alarms</string>

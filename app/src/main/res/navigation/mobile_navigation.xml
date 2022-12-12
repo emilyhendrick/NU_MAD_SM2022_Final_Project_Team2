@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_tasks"
-        android:name="com.example.nu_mad_sm2022_final_project_team2.ui.tasks.TasksFragment"
+        android:name="com.example.nu_mad_sm2022_final_project_team2.ui.calendar.TasksFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_tasks" />
 

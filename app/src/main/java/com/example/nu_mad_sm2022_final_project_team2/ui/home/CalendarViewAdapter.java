@@ -8,37 +8,57 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.nu_mad_sm2022_final_project_team2.R;
-import com.example.nu_mad_sm2022_final_project_team2.ui.tasks.Task;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.ACalendarItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInItem;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.PenciledInSchedule;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskUtils;
+import com.google.android.gms.common.api.internal.TaskUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
 public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapter.TaskViewHolder> {
 
-    private ArrayList<Task> tasks;
+    private PenciledInSchedule schedule;
+    private ArrayList<PenciledInItem> items;
+    TextView txt_start_time, txt_end_time, task_name, txt_category, txt_due, txt_date;
 
-    public CalendarViewAdapter(ArrayList<Task> tasks) {
-        this.tasks = tasks;
+
+    public CalendarViewAdapter(PenciledInSchedule schedule) {
+        this.schedule = schedule;
+        this.items = TaskUtils.sortItemsByStartDate(schedule.getItems());
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder{
 
-        private final TextView calendarEventTime;
-        private final TextView calendarEventName;
-
+        private final TextView txt_start_time, txt_end_time, task_name, txt_category, txt_date, txt_due;
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.calendarEventTime = itemView.findViewById(R.id.calendarEventTime);
-            this.calendarEventName = itemView.findViewById(R.id.calendarEventName);
+            this.txt_start_time = itemView.findViewById(R.id.txt_start_time);
+            this.txt_end_time = itemView.findViewById(R.id.txt_end_time);
+            this.task_name = itemView.findViewById(R.id.task_name);
+            this.txt_category =  itemView.findViewById(R.id.txt_category);
+            this.txt_date = itemView.findViewById(R.id.txt_date);
+            this.txt_due = itemView.findViewById(R.id.txt_due);
         }
 
-        public TextView getTextViewName() {
-            return calendarEventTime;
+        public TextView getTextViewStartTime() {
+            return txt_start_time;
         }
-
-        public TextView getTextViewMessage() {
-            return calendarEventName;
+        public TextView getTextViewEndTime() {
+            return txt_end_time;
         }
+        public TextView getTextViewTaskName() {
+            return task_name;
+        }
+        public TextView getTextViewCategory() {
+            return txt_category;
+        }
+        public TextView getTextViewDate() { return txt_date; }
+        public TextView getTextDueDate() { return txt_due; }
 
     }
 
@@ -54,14 +74,25 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task curTask = this.tasks.get(position);
+        PenciledInItem curTask = this.items.get(position);
 
-        holder.calendarEventName.setText(curTask.getName());
-        holder.calendarEventTime.setText(curTask.getTime());
+        holder.task_name.setText(curTask.getItemName());
+        holder.txt_category.setText(curTask.getCategory());
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        DateFormat mFormat = new SimpleDateFormat("MMM, d");
+        holder.txt_start_time.setText(dateFormat.format(curTask.getScheduledStartDate()));
+        holder.txt_end_time.setText(dateFormat.format(curTask.getScheduledEndDate()));
+        holder.txt_date.setText(mFormat.format(curTask.getScheduledStartDate()));
+        holder.txt_due.setText(curTask.getDueDisplay());
     }
 
     @Override
     public int getItemCount() {
-        return this.tasks.size();
+        if (items == null) {
+            return 0;
+        }
+        else {
+            return this.items.size();
+        }
     }
 }

@@ -60,9 +60,9 @@ public class AlarmsAdaptor extends RecyclerView.Adapter<AlarmsAdaptor.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
-            alarmTime = itemView.findViewById(R.id.alarmTime);
-            alarmFrequency = itemView.findViewById(R.id.alarmFrequency);
-            alarmMessage = itemView.findViewById(R.id.alarmMessage);
+            alarmTime = itemView.findViewById(R.id.taskTitle);
+            alarmFrequency = itemView.findViewById(R.id.category);
+            alarmMessage = itemView.findViewById(R.id.dueDate);
             alarmSwitch = itemView.findViewById(R.id.alarmSwitch);
             alarmLayout = itemView.findViewById(R.id.alarmLayout);
         }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +19,12 @@ import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
 import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.Event;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -39,9 +34,11 @@ public class EditProfileFragment extends Fragment {
 
     private ImageView avatar, editProfileBackArrow;
     private TextView firstNameInput, lastNameInput, pronounsInput, emailInput, birthdayInput, passwordInput, retypedPasswordInput;
-    private Button editAvatarButton, saveChangesButton, editProfileBackButton;
+    private Button editAvatarButton, saveChangesButton;
 
     private ArrayList<Alarm> alarms = new ArrayList<>();
+    private ArrayList<TaskPI> tasks = new ArrayList<>();
+    private ArrayList<Event> events = new ArrayList<>();
     private String avatarUri = null;
 
     private FirebaseAuth mAuth;
@@ -49,12 +46,9 @@ public class EditProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private IEditProfileFragmentAction mListener;
 
-    private static String userPassword;
-
     public EditProfileFragment() {}
 
-    public static EditProfileFragment newInstance(String password) {
-        userPassword = password;
+    public static EditProfileFragment newInstance() {
         EditProfileFragment fragment = new EditProfileFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -94,7 +88,7 @@ public class EditProfileFragment extends Fragment {
         saveChangesButton = view.findViewById(R.id.saveChangesButton);
         editAvatarButton = view.findViewById(R.id.editAvatarButton);
         avatar = view.findViewById(R.id.editAvatar);
-        editProfileBackArrow = view.findViewById(R.id.editProfileLeftArrow);
+        editProfileBackArrow = view.findViewById(R.id.editTaskLeftArrow);
 
         loadProfile(view);
 
@@ -120,15 +114,19 @@ public class EditProfileFragment extends Fragment {
                 String newPronouns = pronounsInput.getText().toString();
                 String newEmail = emailInput.getText().toString();
                 String newBirthday = birthdayInput.getText().toString();
+
+                User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, alarms, tasks, events);
+                updateFirebaseUser(getContext(), newUser);
+
                 String newPassword = passwordInput.getText().toString();
                 String newRetypedPassword = retypedPasswordInput.getText().toString();
 
-                if (!newPassword.equals(newRetypedPassword)) {
-                    retypedPasswordInput.setError("Passwords must match");
-                } else {
-                    User newUser = new User(newFirstName, newLastName, newPronouns, newBirthday, newEmail, avatarUri, alarms);
-                    updateUser(getContext(), newUser, newPassword);
+                if (newPassword.length() > 0 && newPassword.equals(newRetypedPassword)) {
+                    mUser.updatePassword(newPassword);
+                    mUser.reload();
                 }
+
+                mListener.editProfileDone(mUser);
             }
         });
 
@@ -144,6 +142,8 @@ public class EditProfileFragment extends Fragment {
                         User user = documentSnapshot.toObject(User.class);
 
                         alarms = user.getAlarms();
+                        tasks = user.getTasks();
+                        events = user.getEvents();
 
                         firstNameInput.setText(user.getFirstName());
                         lastNameInput.setText(user.getLastName());
@@ -161,35 +161,23 @@ public class EditProfileFragment extends Fragment {
                         }
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void updateUser(Context context, User updatedUser, String newPassword) {
-        db.collection("users")
-                .document(mUser.getEmail())
-                .delete()
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Toast.makeText(getContext(), "Profile loaded!", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateFirebaseUser(context, updatedUser, newPassword);
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void updateFirebaseUser(Context context, User updatedUser, String newPassword) {
+    private void updateFirebaseUser(Context context, User updatedUser) {
         db.collection("users")
-                .document(updatedUser.getEmail())
+                .document(mUser.getEmail())
                 .set(updatedUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -202,92 +190,14 @@ public class EditProfileFragment extends Fragment {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context, "Failed to update user! Try again!", Toast.LENGTH_SHORT).show();
                     }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateAuthenticatedUserEmail(context, updatedUser, newPassword);
-                    }
                 });
-    }
 
-    private void updateAuthenticatedUserEmail(Context context, User updatedUser, String newPassword) {
-        if (!mUser.getEmail().equals(updatedUser.getEmail())) {
-            // Prompt the user to re-provide their sign-in credentials
-            AuthCredential credential = EmailAuthProvider.getCredential(mUser.getEmail(), userPassword);
-            mUser.reauthenticate(credential)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            mUser = mAuth.getCurrentUser();
-                            mUser.updateEmail(updatedUser.getEmail())
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context, "Failed to update authenticated user email! Try again!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(context, "Updated authenticated user email!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            mUser.reload();
-                                            if (newPassword.length() > 0 && !newPassword.equals(userPassword)) {
-                                                updateAuthenticatedUserPassword(context, newPassword);
-                                            } else {
-                                                mListener.editProfileDone(mUser, userPassword);
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-        } else if (newPassword.length() > 0 && !newPassword.equals(userPassword)) {
-            updateAuthenticatedUserPassword(context, newPassword);
-        } else {
-            mUser.reload();
-            mListener.editProfileDone(mUser, userPassword);
-        }
-    }
-
-    private void updateAuthenticatedUserPassword(Context context, String newPassword) {
-        AuthCredential credential = EmailAuthProvider.getCredential(mUser.getEmail(), userPassword);
-        mUser.reauthenticate(credential)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        mUser = mAuth.getCurrentUser();
-                        mUser.updatePassword(newPassword)
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(context, "Failed to update authenticated user password! Try again!", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(context, "Updated authenticated user password!", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        mUser.reload();
-                                        mListener.editProfileDone(mUser, newPassword);
-                                    }
-                                });
-                    }
-                });
+        mUser.reload();
     }
 
     public interface IEditProfileFragmentAction {
         void editProfileBackArrowClicked();
         void editAvatarButtonClicked();
-        void editProfileDone(FirebaseUser mUser, String password);
+        void editProfileDone(FirebaseUser mUser);
     }
 }

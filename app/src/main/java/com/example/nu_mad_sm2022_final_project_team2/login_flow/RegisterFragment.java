@@ -2,7 +2,6 @@ package com.example.nu_mad_sm2022_final_project_team2.login_flow;
 
 import android.content.Context;
 import android.net.Uri;
-import android.net.wifi.hotspot2.pps.Credential;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,15 +18,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.example.nu_mad_sm2022_final_project_team2.alarm.Alarm;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.Event;
+import com.example.nu_mad_sm2022_final_project_team2.calendar_item.TaskPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -166,7 +165,7 @@ public class RegisterFragment extends Fragment {
         }
 
         if (birthday.equals("")) {
-            birthdayInput.setError("Must enter birthday! (MM/DD/YYYY)");
+            lastNameInput.setError("Must enter birthday! (MM/DD/YYYY)");
             isValid = false;
         }
 
@@ -180,7 +179,7 @@ public class RegisterFragment extends Fragment {
             isValid = false;
         }
 
-        if (retypedPassword.equals("") || !retypedPassword.equals(password)) {
+        if (!retypedPassword.equals(password)) {
             retypedPasswordInput.setError("Passwords must match!");
             isValid = false;
         }
@@ -207,14 +206,15 @@ public class RegisterFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mUser = task.getResult().getUser();
-                            addUserToDataBase(context, firstName, lastName, pronouns, birthday, email, password);
+                            addUserToDataBase(context, firstName, lastName, pronouns, birthday, email);
+                            mListener.registerDone(mUser, avatarUri);
                         }
                     }
                 });
     }
 
-    private void addUserToDataBase(Context context, String firstName, String lastName, String pronouns, String birthday, String email, String password) {
-        User user = new User(firstName, lastName, pronouns, birthday, email, new ArrayList<>());
+    private void addUserToDataBase(Context context, String firstName, String lastName, String pronouns, String birthday, String email) {
+        User user = new User(firstName, lastName, pronouns, birthday, email, new ArrayList<Alarm>(), new ArrayList<TaskPI>(), new ArrayList<Event>());
 
         db.collection("users")
                 .document(mUser.getEmail())
@@ -230,18 +230,12 @@ public class RegisterFragment extends Fragment {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(context, "Failed to add user! Try again!", Toast.LENGTH_SHORT).show();
                     }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        mListener.registerDone(mUser, avatarUri, password);
-                    }
                 });
     }
 
     public interface IRegisterFragmentAction {
         void uploadAvatarClicked();
         void registerBackButtonClicked();
-        void registerDone(FirebaseUser mUser, Uri avatarUri, String password);
+        void registerDone(FirebaseUser mUser, Uri avatarUri);
     }
 }
