@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     }
 
     @Override
-    public void registerDone(FirebaseUser mUser, Uri avatarUri, String password) {
+    public void registerDone(FirebaseUser mUser, Uri avatarUri) {
         this.password = password;
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setVisibility(View.VISIBLE);
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
             updateProfilePhotoInFirebase(imageUri, path);
             updateUserProfilePhoto(imageUri);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(password), "editProfileFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(), "editProfileFragment")
                     .addToBackStack(null)
                     .commit();
         } else if (isSetProfilePhotoFromRegister) {
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editProfileButtonPressed() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(password),"editProfileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(),"editProfileFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -394,8 +394,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     }
 
     @Override
-    public void editProfileDone(FirebaseUser mUser, String userPassword) {
-        password = userPassword;
+    public void editProfileDone(FirebaseUser mUser) {
         mUser.reload();
         currentUser = mUser;
         getSupportFragmentManager().beginTransaction()

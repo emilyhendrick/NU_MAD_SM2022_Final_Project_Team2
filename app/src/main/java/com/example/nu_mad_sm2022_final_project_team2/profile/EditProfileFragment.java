@@ -34,7 +34,7 @@ public class EditProfileFragment extends Fragment {
 
     private ImageView avatar, editProfileBackArrow;
     private TextView firstNameInput, lastNameInput, pronounsInput, emailInput, birthdayInput, passwordInput, retypedPasswordInput;
-    private Button editAvatarButton, saveChangesButton, editProfileBackButton;
+    private Button editAvatarButton, saveChangesButton;
 
     private ArrayList<Alarm> alarms = new ArrayList<>();
     private ArrayList<TaskPI> tasks = new ArrayList<>();
