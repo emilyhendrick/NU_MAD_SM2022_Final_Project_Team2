@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     private static final int PERMISSIONS_CODE = 0x100;
     public static final String CHANNEL_ID = "ALARM_CHANNEL";
 
+    private String password;
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
@@ -202,7 +204,8 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     }
 
     @Override
-    public void loginDone(FirebaseUser firebaseUser) {
+    public void loginDone(FirebaseUser firebaseUser, String password) {
+        this.password = password;
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setVisibility(View.VISIBLE);
 
@@ -232,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     }
 
     @Override
-    public void registerDone(FirebaseUser mUser, Uri avatarUri) {
+    public void registerDone(FirebaseUser mUser, Uri avatarUri, String password) {
+        this.password = password;
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setVisibility(View.VISIBLE);
 
@@ -300,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
             updateProfilePhotoInFirebase(imageUri, path);
             updateUserProfilePhoto(imageUri);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(), "editProfileFragment")
+                    .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(password), "editProfileFragment")
                     .addToBackStack(null)
                     .commit();
         } else if (isSetProfilePhotoFromRegister) {
@@ -360,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editProfileButtonPressed() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(),"editProfileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, EditProfileFragment.newInstance(password),"editProfileFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -375,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     @Override
     public void editProfileBackArrowClicked() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "profileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, ProfileFragment.newInstance(), "profileFragment")
                 .addToBackStack(null)
                 .commit();
     }
@@ -390,10 +394,12 @@ public class MainActivity extends AppCompatActivity implements WelcomeFragment.I
     }
 
     @Override
-    public void editProfileDone(FirebaseUser mUser) {
+    public void editProfileDone(FirebaseUser mUser, String userPassword) {
+        password = userPassword;
         mUser.reload();
+        currentUser = mUser;
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, new ProfileFragment(), "profileFragment")
+                .replace(R.id.nav_host_fragment_activity_main, ProfileFragment.newInstance(), "profileFragment")
                 .addToBackStack(null)
                 .commit();
     }

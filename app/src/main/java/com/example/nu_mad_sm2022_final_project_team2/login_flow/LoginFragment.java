@@ -130,7 +130,7 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser mUser = mAuth.getCurrentUser();
-                            mListener.loginDone(mUser);
+                            mListener.loginDone(mUser, password);
                         }
                     }
                 });
@@ -138,6 +138,6 @@ public class LoginFragment extends Fragment {
 
     public interface ILoginFragmentAction {
         void loginBackButtonClicked();
-        void loginDone(FirebaseUser firebaseUser);
+        void loginDone(FirebaseUser firebaseUser, String password);
     }
 }

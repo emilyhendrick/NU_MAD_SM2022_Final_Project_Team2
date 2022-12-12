@@ -18,15 +18,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
 import com.example.nu_mad_sm2022_final_project_team2.R;
 import com.example.nu_mad_sm2022_final_project_team2.User;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class ProfileFragment extends Fragment {
 
@@ -38,6 +44,8 @@ public class ProfileFragment extends Fragment {
     private FirebaseUser mUser;
     private FirebaseFirestore db;
     private IProfileFragmentAction mListener;
+
+    private static String userPassword;
 
     public ProfileFragment() {}
 
@@ -81,6 +89,8 @@ public class ProfileFragment extends Fragment {
         profileBackButton = view.findViewById(R.id.profileLeftArrow);
         logoutButton = view.findViewById(R.id.logoutButton);
 
+        loadProfile(view);
+
         profileBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,33 +112,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        loadProfile(view);
-
 
         return view;
     }
 
     private void loadProfile(View view) {
+        mUser.reload();
         db.collection("users").document(mUser.getEmail()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User user = documentSnapshot.toObject(User.class);
-
-                        name.setText(user.getFirstName() + " " + user.getLastName());
-                        pronouns.setText(user.getPronouns());
-                        email.setText(user.getEmail());
-                        birthday.setText(user.getBirthday());
-
-                        if (user.getAvatarUri() != null) {
-                            Uri avatarUri = Uri.parse(user.getAvatarUri());
-                            Glide.with(view)
-                                    .load(avatarUri)
-                                    .centerCrop()
-                                    .into(avatar);
-                        }
-                    }
-                })
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -139,6 +129,29 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            User user = task.getResult().toObject(User.class);
+
+                            name.setText(user.getFirstName() + " " + user.getLastName());
+                            pronouns.setText(user.getPronouns());
+                            email.setText(user.getEmail());
+                            birthday.setText(user.getBirthday());
+
+                            if (user.getAvatarUri() != null) {
+                                Uri avatarUri = Uri.parse(user.getAvatarUri());
+                                Glide.with(view)
+                                        .load(avatarUri)
+                                        .centerCrop()
+                                        .into(avatar);
+                            } else {
+                                avatar.setImageResource(R.drawable.select_avatar);
+                            }
+                        }
                     }
                 });
     }
